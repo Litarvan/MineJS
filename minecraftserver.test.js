@@ -5,16 +5,12 @@ main.event.on("log",function(message){
 	console.log("message : "+message);
 });
 
-main.event.on("ready",function(){
-	console.log("-----[ Serveur pret ]-----");
-});
-
 main.event.on("playerConnect",function(name){
-	console.log("-----[ bonjour "+name+" ]-----");
+	main.sendCommand("say Bonjour "+name);
 });
 
 main.event.on("playerDisconnect",function(name){
-	console.log("-----[ au revoir "+name+" ]-----");
+	main.stop();
 });
 
 main.run();

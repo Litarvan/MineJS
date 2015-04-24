@@ -178,6 +178,41 @@ var server = {
 			}
 		}.bind(this));
 	},
+
+	/**
+	* SendCommand
+	* Cette fonction envoie la commande en parametres au serveur. inutile de mettre un retour a la ligne
+	* Params :
+	*	command: string
+	* Return : none
+	*/
+	sendCommand: function(command){
+		this.serverProcess.stdin.write(command+"\n","UTF-8");
+	},
+
+	/**
+	* Stop
+	* Cette fonction arrete le serveur
+	* Params : none
+	* Return : none
+	*/
+	stop: function(){
+		this.sendCommand("stop");
+	},
+
+	/**
+	* Restart
+	* Cette fonction relance le serveur
+	* Params : none
+	* Return : none
+	*/
+	restart: function(){
+		this.serverProcess.on("close",function(code){
+			this.run();
+		}.bind(this));
+
+		this.sendCommand("stop");
+	},
 };
 
 module.exports = function(){
