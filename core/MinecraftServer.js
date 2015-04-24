@@ -116,6 +116,33 @@ var server = {
 	},
 
 	/**
+	* AdvancedEventDispacher
+	* Cette fonction declasre des istener pour produir des evenements plus avancés
+	* Params : none
+	* Return : none
+	*/
+	advacedEventDispacher: function(){
+		this.event.on("logInfo",function(message){
+			if(message.search(/Done \(.*\)! For help, type .*/i) != -1)
+			{
+				this.event.emit("ready");
+			}
+			else if(message.search(/(.*) joined the game/i) != -1)
+			{
+				var playerName = message.replace(/(.*) joined the game/i,"$1");
+				playerName = playerName.slice(0, playerName.length - 1);
+				this.event.emit("playerConnect",playerName);
+			}
+			else if(message.search(/(.*) left the game/i) != -1)
+			{
+				var playerName = message.replace(/(.*) left the game/i,"$1");
+				playerName = playerName.slice(0, playerName.length - 1);
+				this.event.emit("playerDisconnect",playerName);
+			}
+		}.bind(this));
+	},
+
+	/**
 	* Run
 	* Cette fonction lance le serveur en suivant sa configuration. Si le serveur n'est pas installé (code 2) le serveur ne sera pas démarré
 	* Params : none
@@ -125,6 +152,8 @@ var server = {
 		this.getInstallStatus(function(){
 			if(this.installStatus <= 1 && this.installStatus >= 0 )
 			{
+				this.advacedEventDispacher();
+
 				this.serverProcess = cp.spawn("java",["-Xmx"+this.ram+"M","-Xms"+this.ram+"M","-jar",this.serverFile,"nogui"],{cwd:this.folder});
 
 				this.serverProcess.stdout.setEncoding("UTF-8");
