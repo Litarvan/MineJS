@@ -4,7 +4,7 @@ var server = {
 	//Variables
 	folder: __dirname+"/../gamefiles/minecraft-server",
 	installStatus: -1,
-	
+
 	//functions
 
 	/**
@@ -25,7 +25,6 @@ var server = {
 			{
 				this.installStatus = 3;
 				callback(3);
-				return;
 			}
 			else
 			{
@@ -58,7 +57,7 @@ var server = {
 					callback(0);
 				}
 			}
-		});
+		}.bind(this));
 	},
 
 	/**
