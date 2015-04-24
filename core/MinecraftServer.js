@@ -1,9 +1,11 @@
 var fs = require('fs');
+var cp = require('child_process');
 
 var server = {
 	//Variables
 	folder: __dirname+"/../gamefiles/minecraft-server",
-	serverFile: "",
+	serverFile: null,
+	serverProcess: null,
 	installStatus: -1,
 	ram: 1024,
 
@@ -63,6 +65,16 @@ var server = {
 		}.bind(this));
 	},
 
+	analyzeLine: function(line){
+		line = line.replace(/\[..\:..\:..\] \[.*\/(.*)\].*: (.*)/i,"$1#$2");
+		line = line.slice(0, line.length - 1);
+		line = line.split("#");
+		if(line.length > 1)
+		{
+			console.log("Serveur : "+line[1]);
+		}
+	},
+
 	/**
 	* Run
 	* Cette fonction lance le serveur en suivant sa configuration. Si le serveur n'est pas installé (code 2) le serveur ne sera pas démarré
@@ -70,7 +82,32 @@ var server = {
 	* Return : none
 	*/
 	run: function(){
-		
+		this.getInstallStatus(function(){
+			if(this.installStatus <= 1 && this.installStatus >= 0 )
+			{
+				this.serverProcess = cp.spawn("java",["-Xmx"+this.ram+"M","-Xms"+this.ram+"M","-jar",this.serverFile,"nogui"],{cwd:this.folder});
+
+				this.serverProcess.stdout.setEncoding("UTF-8");
+				var line = "";
+				this.serverProcess.stdout.on("data",function(data){
+					line += data;
+					if(data.search(/\n/i) != -1)
+					{
+						this.analyzeLine(line);
+						line = "";
+					}
+				}.bind(this));
+
+				this.serverProcess.on("close",function(code){
+					//Serveur etein
+				});
+
+			}
+			else
+			{
+				console.error("Le serveur n'est pas installé correctement code : "+this.installStatus);
+			}
+		}.bind(this));
 	},
 };
 
