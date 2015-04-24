@@ -3,7 +3,9 @@ var fs = require('fs');
 var server = {
 	//Variables
 	folder: __dirname+"/../gamefiles/minecraft-server",
+	serverFile: "",
 	installStatus: -1,
+	ram: 1024,
 
 	//functions
 
@@ -33,6 +35,7 @@ var server = {
 					if(executable == -1)
 					{
 						executable = files[i].search(/minecraft_server(.*).(exe|jar)/i);
+						this.serverFile = files[i];
 					}
 
 					if(config == -1)
@@ -67,7 +70,7 @@ var server = {
 	* Return : none
 	*/
 	run: function(){
-
+		
 	},
 };
 
