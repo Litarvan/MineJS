@@ -1,5 +1,6 @@
 var fs = require('fs');
 var cp = require('child_process');
+var events = require('events');
 
 var server = {
 	//Variables
@@ -8,6 +9,7 @@ var server = {
 	serverProcess: null,
 	installStatus: -1,
 	ram: 1024,
+	event: new events.EventEmitter(),
 
 	//functions
 
@@ -65,13 +67,51 @@ var server = {
 		}.bind(this));
 	},
 
+	/**
+	* AnalyzeLine
+	* Cette fonction analyse une lique de LOG pour en ressortir un tableau contenant le code et le messaage
+	* Params:
+	*	line: string
+	* Return: Array
+	*/
 	analyzeLine: function(line){
 		line = line.replace(/\[..\:..\:..\] \[.*\/(.*)\].*: (.*)/i,"$1#$2");
 		line = line.slice(0, line.length - 1);
 		line = line.split("#");
 		if(line.length > 1)
 		{
-			console.log("Serveur : "+line[1]);
+			return line;
+		}
+		else
+		{
+			return ["",""];
+		}
+	},
+
+	/**
+	* EventDisplacher
+	* Cette fonction analyse le code du LOG et emmet un evenement adequat basique
+	* Params:
+	*	dataLine: Array
+	* Return: none
+	*/
+
+	eventDispacher: function(dataLine){
+		this.event.emit("log",dataLine[1]);
+		switch(dataLine[0])
+		{
+			case "INFO":
+				this.event.emit("logInfo",dataLine[1]);
+			break;
+			case "WARN":
+				this.event.emit("logWarning",dataLine[1]);
+			break;
+			case "ERROR":
+				this.event.emit("logError",dataLine[1]);
+			break;
+			default:
+				this.event.emit("logOther",dataLine[1]);
+			break;
 		}
 	},
 
@@ -93,7 +133,7 @@ var server = {
 					line += data;
 					if(data.search(/\n/i) != -1)
 					{
-						this.analyzeLine(line);
+						this.eventDispacher(this.analyzeLine(line));
 						line = "";
 					}
 				}.bind(this));
