@@ -1,5 +1,6 @@
 var yaml = require("../node_modules/js-yaml");
 var fs = require("fs");
+var crypto = require('crypto');
 
 var user = {
 
@@ -7,6 +8,18 @@ var user = {
 	username: null,
 	password: null,
 	socket: null,
+
+	setPassword: function(password)
+	{
+		this.password = this.hashString(password);
+	},
+
+	hashString: function(string)
+	{
+		var shahash = crypto.createHash('sha1');
+		shahash.update(string);
+		return shahash.digest('hex');
+	},
 
 	check: function(){
 		if(typeof this.username !== 'undefined' && typeof this.password !== 'undefined')
@@ -46,7 +59,7 @@ module.exports = function(socket){
 	user.socket.on("logIn",function(data){
 
 		user.username = data.username;
-		user.password = data.password;
+		user.setPassword(data.password);
 		user.check();
 
 		if(user.trusted)
@@ -55,7 +68,7 @@ module.exports = function(socket){
 		}
 		else
 		{
-			user.socket.emit("logIn",{status:"bad",username:duser.username});
+			user.socket.emit("logIn",{status:"bad",username:user.username});
 		}
 	});
 
