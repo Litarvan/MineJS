@@ -3,6 +3,9 @@
 	<head>
 		<title>MineJS</title>
 		<meta charset="UTF-8"/>
+		<link rel="stylesheet" type="text/css" href="/static/css/global.css"/>
+		<link rel="stylesheet" type="text/css" href="/static/css/startPanel.css"/>
+		<link rel="stylesheet" type="text/css" href="/static/css/apps.css"/>
 	</head>
 	<body>
 
@@ -11,8 +14,13 @@
 		<div id="start-panel" class="panel">
 		</div>
 
+		<div id="app" class="panel">
 		</div>
 
+		</div>
+
+	<script src="/static/js/jquery.js"></script>
+	<script src="/static/js/angular.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 		var socket = new io();
