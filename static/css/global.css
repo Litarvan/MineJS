@@ -76,6 +76,7 @@
 
 #control-bar
 {
+	z-index: 20;
 	width: 99%;
 	height: 40px;
 	position: absolute;
@@ -85,7 +86,6 @@
 	color: white;
 	padding: 0 1% 0 1%;
 	line-height: 31px;
-	z-index: 20;
 }
 
 #control-bar span
@@ -104,12 +104,13 @@
 	position: relative;
 	top: 3px;
 	margin-right: 5px;
+	margin-left: 5px;
 	font-size: 25px;
 }
 
-#control-bar span:hover
+#control-bar span:hover, #bar-container .menu span:hover
 {
-	background-color: rgba(255,255,255,0.6);
+	background-color: rgba(255,255,255,0.8);
 	color: #0072FF;
 	text-shadow: 0 0 5px #0072FF;
 }
@@ -117,4 +118,47 @@
 #control-bar #hideBar
 {
 	float: right;
+}
+
+#bar-container .menu span
+{
+	transition-property: all;
+	transition-duration: 0.3s;
+	display: block;
+	font-size: 15px;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+
+#bar-container .menu span i
+{
+	font-size: 25px;
+}
+
+#bar-container .menu
+{
+	z-index: 20;
+	position: absolute;
+	bottom: 40px;
+	background-color: rgba(0,0,0,0.5);
+	color: white;
+	max-height: 1000px;
+	overflow: hidden;
+	transition-property: all;
+	transition-duration: 0.3s;
+}
+
+#bar-container .menu.hide
+{
+	max-height: 0px;
+}
+
+#bar-container .menu#menuServer
+{
+	left: 70px;
+}
+
+#bar-container .menu#menuPlayers
+{
+	left: 200px;
 }
