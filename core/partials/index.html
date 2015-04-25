@@ -29,12 +29,12 @@
 		<div id="app" class="panel">
 		</div>
 
-			<div id="bar-container">
-			<div class="menu" id="menuServer">
+			<div id="bar-container" ng-controller="controlBarController">
+			<div class="menu" id="menuServer" ng-class="{hide:!isShowMenu('server')}">
 				<span><i class="fi-power"></i></span>
 				<span><i class="fi-refresh"></i></span>
 			</div>
-			<div class="menu" id="menuPlayers">
+			<div class="menu" ng-class="{hide:!isShowMenu('players')}" id="menuPlayers">
 				<span>EpicKiwi</span>
 				<span>Soad36</span>
 				<span>Kevin94</span>
@@ -42,8 +42,14 @@
 				<span>1Elton</span>
 				<span>MomoLeHommard</span>
 			</div>
-				<nav id="control-bar">
-					<span><i class="fi-flag"></i></span><span><i class="fi-x"></i>Non installé</span><span><i class="fi-torso"></i>Joueurs: 0/?</span><span><i class="fi-puzzle"></i>0 Plugins</span><span><i class="fi-graph-bar"></i>Charge: 0</span><span id="hideBar"><i class="fi-arrows-compress"></i></span>
+			<div class="menu" ng-class="{hide:!isShowMenu('command')}" id="menuCommand">
+				<form>
+				<input type="text" ng-model="command"/><input type="submit" value=">"/>
+				</form>
+			</div>
+				<nav id="control-bar" ng-class="{hide:hideBar}">
+					<span><i class="fi-flag"></i></span><span ng-click="toggleMenu('server')"><i class="fi-x"></i>Non installé</span><span ng-click="toggleMenu('players')"><i class="fi-torso"></i>Joueurs: 0/?</span><span><i class="fi-puzzle"></i>0 Plugins</span><span><i class="fi-graph-bar"></i>Charge: 0</span><span ng-click="toggleMenu('command')"><i class="fi-italic"></i></span>
+					<span id="hideBar"><i class="fi-arrows-compress"></i></span>
 				</nav>
 			</div>
 		</div>

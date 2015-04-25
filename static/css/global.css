@@ -162,3 +162,37 @@
 {
 	left: 200px;
 }
+
+
+#bar-container .menu#menuCommand
+{
+	left: 552px;
+}
+
+#bar-container .menu#menuCommand input
+{
+	padding: 5px;
+	background-color: transparent;
+	border: solid 2px white;
+	outline: none;
+	color: white;
+}
+
+#bar-container .menu#menuCommand form
+{
+	padding: 10px;
+}
+
+#bar-container .menu#menuCommand input[type="submit"]
+{
+	padding: 5px 10px;
+	border-left: none;
+	border-radius: 0 5px 5px 0;
+	font-weight: bold;
+}
+
+#bar-container .menu#menuCommand input[type="text"]
+{
+	border-radius: 5px 0 0 5px;
+	width: 300px;
+}
