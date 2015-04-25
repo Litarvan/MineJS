@@ -25,10 +25,14 @@ app.factory("socket",function(socketFactory){
 	return socketFactory();
 });
 
-app.controller("globalController",function($scope,graphicalFactory){
+app.controller("globalController",function($scope,socket,graphicalFactory){
 	$scope.backgroundBlur = function(){
 		return graphicalFactory.backgroundBlur;
 	}
+
+	socket.on("notif",function(alert){
+		console.log(alert);
+	});
 });
 
 app.controller("loginController",function($scope,userFactory,socket,graphicalFactory){
@@ -90,4 +94,10 @@ app.controller("controlBarController",function($scope,barMenuFactory){
 		}
 	}
 
+});
+
+app.controller("menuCommandController",function($scope,socket){
+	$scope.sendCommand = function(){
+		socket.emit("sendCommand",$scope.command);
+	};
 });

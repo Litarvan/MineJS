@@ -3,7 +3,7 @@ var Server = new require("./core/minecraftServer");
 
 app.gameServer = new Server();
 
-/*if(!app.gameServer.run())
+if(!app.gameServer.run())
 {
 	app.gameServer.install("latest",function(){
 		app.gameServer.run();
@@ -16,6 +16,6 @@ app.gameServer.event.on("log",function(message){
 
 app.gameServer.event.on("playerDisconnect",function(name){
 	app.gameServer.sendCommand("stop");
-});*/
+});
 
 app.run();

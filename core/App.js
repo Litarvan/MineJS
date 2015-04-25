@@ -30,6 +30,16 @@ module.exports = function(){
 
 	io.on("connection",function(socket){
 		var user = new User(socket);
+		user.socket.on("sendCommand",function(command){
+			if(user.trusted)
+			{
+				app.gameServer.sendCommand(command);
+			}
+			else
+			{
+				user.socket.emit("notif",{type:"error",message:"Vous devez d'abort vous connecter"});
+			}
+		});
 	});
 
 	return app;

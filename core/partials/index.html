@@ -16,8 +16,8 @@
 		<div id="start-panel" class="panel">
 			<div id="login-form" ng-controller="loginController" ng-class="{hide:isLogged}">
 				<h1>MineJS</h1>
-				<div class="logBox" ng-class="{error:formError}" ng-submit="logIn()">
-					<form>
+				<div class="logBox" ng-class="{error:formError}">
+					<form ng-submit="logIn()">
 						<input type="text" placeholder="Nom d'utilisateur" ng-model="username"/>
 						<input type="password" placeholder="Mot de passe" ng-model="password"/>
 						<input type="submit" vlaue="Se conecter"/>
@@ -42,8 +42,8 @@
 				<span>1Elton</span>
 				<span>MomoLeHommard</span>
 			</div>
-			<div class="menu" ng-class="{hide:!isShowMenu('command')}" id="menuCommand">
-				<form>
+			<div class="menu" ng-controller="menuCommandController" ng-class="{hide:!isShowMenu('command')}" id="menuCommand">
+				<form ng-submit="sendCommand()">
 				<input type="text" ng-model="command"/><input type="submit" value=">"/>
 				</form>
 			</div>
