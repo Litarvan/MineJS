@@ -17,7 +17,7 @@ app.factory("barMenuFactory",function(){
 	return {
 		server: false,
 		players: false,
-		command: true,
+		command: false,
 	};
 })
 
@@ -98,6 +98,10 @@ app.controller("controlBarController",function($scope,barMenuFactory){
 
 app.controller("menuCommandController",function($scope,socket){
 	$scope.sendCommand = function(){
-		socket.emit("sendCommand",$scope.command);
+		if($scope.command != "" && $scope.command != null)
+		{
+			socket.emit("sendCommand",$scope.command);
+			$scope.command = "";
+		}
 	};
 });
