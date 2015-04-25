@@ -1,3 +1,25 @@
+@keyframes fadeOutHide {
+    from {
+    	opacity: 1;
+    	display: auto;
+    }
+    to {
+    	opacity: 0;
+    	display: none;
+    }
+}
+
+@-webkit-keyframes fadeOutHide {
+    from {
+    	opacity: 1;
+    	display: auto;
+    }
+    to {
+    	opacity: 0;
+    	display: none;
+    }
+}
+
 #start-panel
 {
 }
@@ -10,6 +32,7 @@
 	left: 0;
 	vertical-align: middle;
 	transform: translateY(-50%);
+	transition-delay: 0.5s;
 }
 
 #login-form h1
@@ -20,15 +43,19 @@
 	font-weight: 300;
 	color: white;
 	text-shadow: black 0 0 5px;
+	position: relative;
 }
 
 #login-form .logBox
 {
+	position:relative;
 	margin-right: auto;
 	margin-left: auto;
 	margin-top: 1vh;
 	padding: 1vw 1vh;
 	width: 350px;
+
+	overflow: hidden;
 
 	background-color: white;
 	box-shadow: black 0 0 5px;

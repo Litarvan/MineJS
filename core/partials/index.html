@@ -10,10 +10,10 @@
 	</head>
 	<body ng-controller="globalController">
 
-		<div id="display" ng-class="{blur:backgroundBlur}">
+		<div id="display" ng-class="{blur:backgroundBlur()}">
 
 		<div id="start-panel" class="panel">
-			<div id="login-form" ng-controller="loginController">
+			<div id="login-form" ng-controller="loginController" ng-class="{hide:isLogged}">
 				<h1>MineJS</h1>
 				<div class="logBox" ng-class="{error:formError}" ng-submit="logIn()">
 					<form>
@@ -32,6 +32,7 @@
 
 	<script src="/static/js/jquery.js"></script>
 	<script src="/static/js/angular.js"></script>
+	<script src="/static/js/tweenMax.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/static/js/angular-socket-io/socket.js"></script>
 	<script src="/static/js/app.js"></script>
