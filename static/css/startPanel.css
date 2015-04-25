@@ -13,6 +13,14 @@
 	background-size: 100% auto;
 }
 
+@media screen and (max-width: 1200px)
+{
+	#start-panel::before
+	{
+		background-size: auto 100%;
+	}
+}
+
 #start-panel.blur::before
 {
 	-webkit-filter: blur(10px);
