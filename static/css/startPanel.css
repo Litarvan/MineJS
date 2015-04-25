@@ -1,16 +1,27 @@
-#start-panel::before
+@keyframes fadeOutHide {
+    from {
+    	opacity: 1;
+    	display: auto;
+    }
+    to {
+    	opacity: 0;
+    	display: none;
+    }
+}
+
+@-webkit-keyframes fadeOutHide {
+    from {
+    	opacity: 1;
+    	display: auto;
+    }
+    to {
+    	opacity: 0;
+    	display: none;
+    }
+}
+
+#start-panel
 {
-	content: "";
-
-	width: 110%;
-	height: 110%;
-	position: absolute;
-	top: -5%;
-	left: -5%;
-	z-index: 0;
-
-	background-image: url("../img/background.png");
-	background-size: 100% auto;
 }
 
 @media screen and (max-width: 1200px)
@@ -21,15 +32,98 @@
 	}
 }
 
-#start-panel.blur::before
+#login-form
 {
-	-webkit-filter: blur(10px);
-	-moz-filter: blur(10px);
-	-o-filter: blur(10px);
-	-ms-filter: blur(10px);
-	filter: blur(10px);
+	width: 100%;
+	position: absolute;
+	top: 40%;
+	left: 0;
+	vertical-align: middle;
+	transform: translateY(-50%);
+	transition-delay: 0.5s;
 }
 
-#start-panel
+#login-form h1
 {
+	font-size: 10vh;
+	text-align: center;
+	font-family: "open sans", arial, default;
+	font-weight: 300;
+	color: white;
+	text-shadow: black 0 0 5px;
+	position: relative;
+}
+
+#login-form .logBox
+{
+	position:relative;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 1vh;
+	padding: 1vw 1vh;
+	width: 350px;
+
+	overflow: hidden;
+
+	background-color: white;
+	box-shadow: black 0 0 5px;
+
+	transition-duration: 0.5s;
+	transition-property: all;
+}
+
+#login-form .logBox.error
+{
+	background-color: #FC9999;
+}
+
+#login-form .logBox input[type="text"],#login-form .logBox input[type="password"]
+{
+	position: relative;
+	width: 98%;
+	font-size: 15px;
+	line-height: 30px;
+	padding: 1%;
+	border: solid 1px #CFCFCF;
+	z-index: 1;
+	transform: scale(1);
+
+	transition-duration: 0.5s;
+	trtansition-property: all;
+}
+
+#login-form .logBox input[type="text"]:focus,#login-form .logBox input[type="password"]:focus,#login-form .logBox input[type="submit"]:focus
+{
+	transform: scale(1.01);
+	outline: none;
+	border-color: #0072FF;
+	z-index: 2;
+	box-shadow: 0 0 5px #0050B2;
+}
+
+#login-form .logBox input[type="submit"]
+{
+	position: relative;
+	z-index: 1;
+	background-color: white;
+	width: 100.5%;
+	font-size: 15px;
+	line-height: 30px;
+	border: solid 1px #CFCFCF;
+	font-weight: bold;
+	color: #0072FF;
+	transform: scale(1);
+
+	transition-duration: 0.5s;
+	trtansition-property: all;
+}
+
+#login-form .logBox input:first-child
+{
+	border-radius: 10px 10px 0 0;
+}
+
+#login-form .logBox input:last-child
+{
+	border-radius: 0 0 10px 10px;
 }

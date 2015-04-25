@@ -12,6 +12,30 @@
 	position: relative;
 }
 
+#display::before
+{
+	content: "";
+
+	width: 110%;
+	height: 110%;
+	position: absolute;
+	top: -5%;
+	left: -5%;
+	z-index: 0;
+
+	background-image: url("../img/background.png");
+	background-size: 100% auto;
+}
+
+#display.blur::before
+{
+	-webkit-filter: blur(10px);
+	-moz-filter: blur(10px);
+	-o-filter: blur(10px);
+	-ms-filter: blur(10px);
+	filter: blur(10px);
+}
+
 .panel
 {
 	width: 100%;
