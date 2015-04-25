@@ -307,7 +307,9 @@ var server = {
 	* Run
 	* Cette fonction lance le serveur en suivant sa configuration. Si le serveur n'est pas installé (code 2) le serveur ne sera pas démarré
 	* Params : none
-	* Return : none
+	* Return : 
+	*	true : pas d'erreur
+	*	false: le serveur n'est pas installé
 	*/
 	run: function(){
 		this.getInstallStatus(function(){
@@ -331,10 +333,12 @@ var server = {
 					//Serveur etein
 				});
 
+				return true;
+
 			}
 			else
 			{
-				console.error("Le serveur n'est pas installé correctement code : "+this.installStatus);
+				return false;
 			}
 		}.bind(this));
 	},
