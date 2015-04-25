@@ -12,6 +12,11 @@ app.get("/",function(request,response){
 
 io.on("connection",function(socket){
 	console.log("Conexion socket");
+
+	socket.on("logIn",function(data){
+		console.log(data);
+		socket.emit("logIn",{status:"bad",username:data.username});
+	});
 });
 
 http.listen(80);

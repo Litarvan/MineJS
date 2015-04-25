@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="MineJS">
 	<head>
 		<title>MineJS</title>
 		<meta charset="UTF-8"/>
@@ -8,17 +8,17 @@
 		<link rel="stylesheet" type="text/css" href="/static/css/apps.css"/>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700,300' rel='stylesheet' type='text/css'>
 	</head>
-	<body>
+	<body ng-controller="globalController">
 
-		<div id="display" class="blur">
+		<div id="display" ng-class="{blur:backgroundBlur}">
 
 		<div id="start-panel" class="panel">
-			<div id="login-form">
+			<div id="login-form" ng-controller="loginController">
 				<h1>MineJS</h1>
-				<div class="logBox">
+				<div class="logBox" ng-class="{error:formError}" ng-submit="logIn()">
 					<form>
-						<input type="text" placeholder="Nom d'utilisateur"/>
-						<input type="password" placeholder="Mot de passe"/>
+						<input type="text" placeholder="Nom d'utilisateur" ng-model="username"/>
+						<input type="password" placeholder="Mot de passe" ng-model="password"/>
 						<input type="submit" vlaue="Se conecter"/>
 					</form>
 				</div>
@@ -33,8 +33,7 @@
 	<script src="/static/js/jquery.js"></script>
 	<script src="/static/js/angular.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
-	<script>
-		var socket = new io();
-	</script>
+	<script src="/static/js/angular-socket-io/socket.js"></script>
+	<script src="/static/js/app.js"></script>
 	</body>
 </html>
