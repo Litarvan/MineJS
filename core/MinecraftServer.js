@@ -1,6 +1,7 @@
 var fs = require('fs');
 var cp = require('child_process');
 var events = require('events');
+var https = require('https');
 
 var server = {
 	//Variables
@@ -9,6 +10,8 @@ var server = {
 	serverProcess: null,
 	installStatus: -1,
 	ram: 1024,
+	eula: false,
+	version: 0,
 	event: new events.EventEmitter(),
 
 	//functions
@@ -68,6 +71,164 @@ var server = {
 	},
 
 	/**
+	* GetAvaliableVersions
+	* Cette fonction cherche sur le serveur officiel la liste des version RELASE de serveur minecraft
+	* Params:
+	*	callback: function(array)
+	* Return: none
+	*/
+	getAvaliableVersions: function(callback)
+	{
+		https.get("https://s3.amazonaws.com/Minecraft.Download/versions/versions.json",function(response){
+
+			var dataSpam = "";
+
+			response.on("data",function(chunk){
+				dataSpam += chunk;
+			});
+
+			response.on("end",function(){
+				var avaliableVersions = [];
+				var datas = JSON.parse(dataSpam);
+				for(var i = 0; i < datas.versions.length; i++)
+				{
+					if(datas.versions[i].type == "release")
+					{
+						avaliableVersions.push(datas.versions[i].id);
+					}
+				}
+				callback(avaliableVersions);
+			});
+
+		})
+	},
+
+	/**
+	* Install
+	* Cette fonction permet d'installer le serveur minecraft de version donné en arguments.Le code de resultat sera retourné
+	* Codes:
+	*	100 : le serveur a été correctement installé
+	*	101 : le serveur était déjà installé
+	* Params:
+	*	version: string
+	*	callback: function(int)
+	* Return: none
+	* 
+	*/
+	install: function(version,callback){
+
+		this.getInstallStatus(function(){
+
+			if(this.installStatus == 0 )
+			{
+				callback(101);
+				return;
+			}
+
+			if(this.installStatus == 1)
+			{
+				this.generateConfig(function(){
+					callback(100);
+					return;
+				});
+			}
+			
+			if(this.installStatus == 3)
+			{
+				fs.mkdirSync(this.folder);
+			}
+			
+			if(this.installStatus <= 3)
+			{
+				this.downloadServer(version,function(code){
+					this.generateConfig(function(){
+						if(code == 200)
+						{
+							callback(100);
+						}
+						else
+						{
+							callback(code);
+						}
+						return;
+					});
+				}.bind(this));
+			}
+
+		}.bind(this));
+	},
+
+	generateConfig: function(callback){
+		this.event.once("ready",function(){
+			this.stop();
+			callback();
+		}.bind(this));
+		this.setEula(true);
+		this.run();
+	},
+
+	setEula: function(state){
+		this.eula = state;
+		if(fs.existsSync(this.folder+"/eula.txt"))
+		{
+			fs.unlinkSync(this.folder+"/eula.txt");
+		}
+		fs.writeFileSync(this.folder+"/eula.txt","eula="+state);
+	},
+
+	/**
+	* downloadServer
+	* Cette fonction télécharge le serveur de version donnée
+	* Codes:
+	*	200 : le serveur s'est téléchargé
+	*	201 : le numero de version est invalide
+	*	203 : le serveur est déja présent dans les dossiers
+	*	204 : erreur de connexion pour le téléchargement
+	* Params:
+	*	version: string
+	*	callback: function(int)
+	* Return: none
+	*/
+	downloadServer: function(version,callback){
+
+		this.getAvaliableVersions(function(versions){
+
+			for(var i = 0,finded = false; i<versions.length; i++)
+			{
+				if(versions[i] == version || version == "latest")
+				{
+					finded = true;
+					this.version = versions[i];
+					var fileStream = fs.createWriteStream(this.folder+"/minecraft_server."+this.version+".jar");
+					https.get("https://s3.amazonaws.com/Minecraft.Download/versions/"+this.version+"/minecraft_server."+this.version+".jar",function(response){
+						if(response.statusCode == 200)
+						{
+							response.pipe(fileStream);	
+						}
+						else
+						{
+							callback(204);
+							return;
+						}
+
+						response.on("end",function(){
+							callback(200);
+						});
+					});
+					break;
+				}
+			}
+
+			if(!finded)
+			{
+				callback(201);
+			}
+
+		}.bind(this));
+
+	},
+
+	/**
 	* AnalyzeLine
 	* Cette fonction analyse une lique de LOG pour en ressortir un tableau contenant le code et le messaage
 	* Params:
@@ -121,7 +282,7 @@ var server = {
 	* Params : none
 	* Return : none
 	*/
-	advacedEventDispacher: function(){
+	advancedEventDispacher: function(){
 		this.event.on("logInfo",function(message){
 			if(message.search(/Done \(.*\)! For help, type .*/i) != -1)
 			{
@@ -152,7 +313,6 @@ var server = {
 		this.getInstallStatus(function(){
 			if(this.installStatus <= 1 && this.installStatus >= 0 )
 			{
-				this.advacedEventDispacher();
 
 				this.serverProcess = cp.spawn("java",["-Xmx"+this.ram+"M","-Xms"+this.ram+"M","-jar",this.serverFile,"nogui"],{cwd:this.folder});
 
@@ -216,5 +376,6 @@ var server = {
 };
 
 module.exports = function(){
+	server.advancedEventDispacher();
 	return server;
 };
