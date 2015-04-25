@@ -49,6 +49,7 @@ app.controller("loginController",function($scope,userFactory,socket,graphicalFac
 			if(data.status == "bad")
 			{
 				$scope.username = data.username;
+				$scope.password = "";
 				$scope.formError = true;
 			}
 			else
@@ -60,7 +61,5 @@ app.controller("loginController",function($scope,userFactory,socket,graphicalFac
 				boxOut();
 			}
 		});
-
-		$scope.username = $scope.password = "";
 	}
 });
