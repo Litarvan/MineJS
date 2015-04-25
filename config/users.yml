@@ -1,16 +1,2 @@
----
-  - 
-    username: "baptiste"
-    password: "0c58da9d57a01ee0b7201bd15c95a8345e3dee71"
-  - 
-    username: "Harper"
-    password: "Inez"
-  - 
-    username: "Hodge"
-    password: "Wendi"
-  - 
-    username: "Cain"
-    password: "Letha"
-  - 
-    username: "Noel"
-    password: "Robbie"
+- username: baptiste
+  password: 9d25f3b6ab8cfba5d2d68dc8d062988534a63e87

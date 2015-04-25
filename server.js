@@ -14,8 +14,13 @@ app.get("/",function(request,response){
 });
 
 io.on("connection",function(socket){
-	console.log("Conexion socket");
 	var user = new User(socket);
 });
 
+var user = new User();
+user.infos.username = "baptiste";
+user.setPassword("yolo");
+user.save();
+
+console.log("Ecoute ...");
 http.listen(80);
