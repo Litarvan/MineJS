@@ -13,6 +13,14 @@ app.factory("graphicalFactory",function(){
 	}
 });
 
+app.factory("barMenuFactory",function(){
+	return {
+		server: false,
+		players: false,
+		command: true,
+	};
+})
+
 app.factory("socket",function(socketFactory){
 	return socketFactory();
 });
@@ -62,4 +70,24 @@ app.controller("loginController",function($scope,userFactory,socket,graphicalFac
 			}
 		});
 	}
+});
+
+app.controller("controlBarController",function($scope,barMenuFactory){
+	$scope.hideBar = false;
+
+	$scope.isShowMenu = function(name){
+		return barMenuFactory[name];
+	}
+
+	$scope.toggleMenu = function(name){
+		if(barMenuFactory[name])
+		{
+			barMenuFactory[name] = false;
+		}
+		else
+		{
+			barMenuFactory[name] = true;
+		}
+	}
+
 });
