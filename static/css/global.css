@@ -2,6 +2,7 @@
 {
 	margin: 0;
 	padding: 0;
+	font-family: "open sans", arial, default;
 }
 
 #display
@@ -70,5 +71,50 @@
 
 .panel.active
 {
-	z-index: 100;
+	z-index: 10;
+}
+
+#control-bar
+{
+	width: 99%;
+	height: 40px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0,0,0,0.5);
+	color: white;
+	padding: 0 1% 0 1%;
+	line-height: 31px;
+	z-index: 20;
+}
+
+#control-bar span
+{
+	display: inline-block;
+	margin: 0 5px 0 5px;
+	padding: 0 5px 5px 5px;
+	cursor: pointer;
+	transition-property: all;
+	transition-duration: 0.3s;
+	font-size: 15px;
+}
+
+#control-bar span i
+{
+	position: relative;
+	top: 3px;
+	margin-right: 5px;
+	font-size: 25px;
+}
+
+#control-bar span:hover
+{
+	background-color: rgba(255,255,255,0.6);
+	color: #0072FF;
+	text-shadow: 0 0 5px #0072FF;
+}
+
+#control-bar #hideBar
+{
+	float: right;
 }
