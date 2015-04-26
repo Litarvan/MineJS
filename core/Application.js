@@ -13,6 +13,19 @@ var application = {
 	html: null,					//Position du fichier html affiché dans le fenètre client
 	css: null, 					//Position du fichier CSS décrivant l'application
 	script: null,				//Position du script executé coté client
+	//Fonctions
+	getInfos: function(){
+		return {
+			id: this.id,
+			name: this.name,
+			description: this.description,
+			type: this.type,
+			needLogIn: this.needLogIn,
+			html: this.html,
+			css: this.css,
+			script: this.script,
+		};
+	},
 }
 
 module.exports = function(appManager){

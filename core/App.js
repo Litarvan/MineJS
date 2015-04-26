@@ -100,7 +100,7 @@ module.exports = function(){
 			{
 				if((app.appManager.appsAvaliable[id].needLogIn && user.trusted) || !app.appManager.appsAvaliable[id].needLogIn)
 				{
-					user.socket.emit("openApp",app.appManager.appsAvaliable[id]);
+					user.socket.emit("openApp",app.appManager.appsAvaliable[id].getInfos());
 				}
 				else
 				{

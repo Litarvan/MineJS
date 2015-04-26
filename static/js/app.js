@@ -39,7 +39,6 @@ app.factory("onlinePlayersFactory",function(){
 });
 
 app.controller("globalController",function($scope,socket,graphicalFactory){
-	socket.emit("openApp","setup");
 	$scope.backgroundBlur = function(){
 		return graphicalFactory.backgroundBlur;
 	}
@@ -125,6 +124,11 @@ app.controller("controlBarController",function($scope,barMenuFactory,serverState
 		onlinePlayersFactory = players;
 	});
 
+	//TESTS
+	$scope.test = function(){	
+		socket.emit("openApp","setup");
+	};
+
 });
 
 app.controller("menuCommandController",function($scope,socket){
@@ -148,4 +152,25 @@ app.controller("menuServerController",function($scope,socket){
 		console.log("restart");
 		socket.emit("gameServerReload");
 	}
+});
+
+app.controller("applicationController",function($scope,$timeout,socket){
+
+	$scope.state = "off";
+	$scope.htmlPath = null;
+	$scope.cssPath = null;
+	$scope.scriptPath = null;
+	$scope.application = null;
+
+	socket.on("openApp",function(app){
+		$scope.application = app;
+		$scope.htmlPath = "/app/"+$scope.application.id+"/"+$scope.application.html;
+		$scope.cssPath = "/app/"+$scope.application.id+"/"+$scope.application.css;
+		$scope.scriptPath = "/app/"+$scope.application.id+"/"+$scope.application.script;
+		$timeout(function(){
+			$scope.state = "on";
+		},19);
+		console.log($scope.application);
+	});
+
 });
