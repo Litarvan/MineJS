@@ -7,5 +7,7 @@ module.exports = function(appManager){
 	setup.name = "Installation";
 	setup.description = "Permet la premiere installation de MineJS";
 
+	setup.html = "index.html";
+
 	return setup;
 }
