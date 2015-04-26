@@ -20,6 +20,12 @@
     }
 }
 
+a
+{
+	text-decoration: none;
+	color: #3984FF;
+}
+
 #start-panel
 {
 }
@@ -62,6 +68,15 @@
 
 	transition-duration: 0.5s;
 	transition-property: all;
+}
+
+#login-form .infoBox
+{
+	width: 90%;
+	text-align: center;
+	padding: 5% 10px;
+	font-size: 15px;
+	color: #606060;
 }
 
 #login-form .logBox.error
