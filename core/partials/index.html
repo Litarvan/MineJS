@@ -48,7 +48,7 @@
 				</form>
 			</div>
 				<nav id="control-bar" ng-class="{hide:hideBar}">
-					<span><i class="fi-flag"></i></span><span ng-click="toggleMenu('server')"><i class="fi-x"></i>Non installé</span><span ng-click="toggleMenu('players')"><i class="fi-torso"></i>Joueurs: 0/?</span><span><i class="fi-puzzle"></i>0 Plugins</span><span><i class="fi-graph-bar"></i>Charge: 0</span><span ng-click="toggleMenu('command')"><i class="fi-italic"></i></span>
+					<span><i class="fi-flag"></i></span><span ng-click="toggleMenu('server')"><i class="fi-{{serverState.icon}}"></i>{{serverState.info}}</span><span ng-click="toggleMenu('players')"><i class="fi-torso"></i>Joueurs: 0/?</span><span><i class="fi-puzzle"></i>0 Plugins</span><span><i class="fi-graph-bar"></i>Charge: 0</span><span ng-click="toggleMenu('command')"><i class="fi-italic"></i></span>
 					<span id="hideBar"><i class="fi-arrows-compress"></i></span>
 				</nav>
 			</div>

@@ -25,6 +25,15 @@ app.factory("socket",function(socketFactory){
 	return socketFactory();
 });
 
+app.factory("serverStateFactory",function(){
+	return [
+		{icon:"x",info:"Hors ligne"},
+		{icon:"loop",info:"Démarrage"},
+		{icon:"check",info:"En ligne"},
+		{icon:"minus",info:"Inconnu"},
+	]
+});
+
 app.controller("globalController",function($scope,socket,graphicalFactory){
 	$scope.backgroundBlur = function(){
 		return graphicalFactory.backgroundBlur;
@@ -76,8 +85,13 @@ app.controller("loginController",function($scope,userFactory,socket,graphicalFac
 	}
 });
 
-app.controller("controlBarController",function($scope,barMenuFactory){
+app.controller("controlBarController",function($scope,barMenuFactory,serverStateFactory,socket){
 	$scope.hideBar = false;
+	$scope.serverState = serverStateFactory[3];
+
+	socket.on("gameServerState",function(state){
+		$scope.serverState = serverStateFactory[state];
+	});
 
 	$scope.isShowMenu = function(name){
 		return barMenuFactory[name];

@@ -12,6 +12,7 @@ var server = {
 	ram: 1024,
 	eula: false,
 	version: 0,
+	state:0,
 	event: new events.EventEmitter(),
 
 	//functions
@@ -300,6 +301,18 @@ var server = {
 				playerName = playerName.slice(0, playerName.length - 1);
 				this.event.emit("playerDisconnect",playerName);
 			}
+		}.bind(this));
+
+		this.event.on("load",function(message){
+			this.state = 1;
+		}.bind(this));
+
+		this.event.on("ready",function(message){
+			this.state = 2
+		}.bind(this));
+
+		this.event.on("close",function(message){
+			this.state = 0;
 		}.bind(this));
 	},
 

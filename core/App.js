@@ -4,6 +4,7 @@ var http = require('http').Server(expressApp);
 var io = require('../node_modules/socket.io')(http);
 var fs = require('fs');
 var yaml = require('../node_modules/js-yaml');
+var Server = new require("./minecraftServer");
 
 var User = require('./User');
 
@@ -21,6 +22,8 @@ var app = {
 }
 
 module.exports = function(){
+	app.gameServer = new Server();
+
 	expressApp.use("/static",express.static("static"));
 	expressApp.use("/partials",express.static("core/partials"));
 
@@ -30,6 +33,9 @@ module.exports = function(){
 
 	io.on("connection",function(socket){
 		var user = new User(socket);
+
+		user.socket.emit("gameServerState",app.gameServer.state);
+
 		user.socket.on("sendCommand",function(command){
 			if(user.trusted)
 			{
@@ -40,6 +46,25 @@ module.exports = function(){
 				user.socket.emit("notif",{type:"error",message:"Vous devez d'abort vous connecter"});
 			}
 		});
+	});
+
+	if(!app.gameServer.run())
+	{
+		app.gameServer.install("latest",function(){
+			app.gameServer.run();
+		});
+	}
+
+	app.gameServer.event.on("load",function(){
+		io.emit("gameServerState",1);
+	});
+
+	app.gameServer.event.on("ready",function(){
+		io.emit("gameServerState",2);
+	});
+
+	app.gameServer.event.on("close",function(){
+		io.emit("gameServerState",0);
 	});
 
 	return app;
