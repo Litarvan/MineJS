@@ -1,5 +1,13 @@
 var app = angular.module("MineJS",["btford.socket-io"]);
 
+app.config(function($controllerProvider, $compileProvider)
+{
+    app.controllerProvider = $controllerProvider;
+    app.compileProvider    = $compileProvider;
+
+    // Register routes with the $routeProvider
+});
+
 app.factory("userFactory",function(){
 	return {
 		status: "anonymous",
@@ -161,12 +169,22 @@ app.controller("applicationController",function($scope,$timeout,socket){
 	$scope.cssPath = null;
 	$scope.scriptPath = null;
 	$scope.application = null;
+	$scope.selectedTab = 1;
+
+	$scope.setTab = function(id)
+	{
+		$scope.selectedTab = id;
+	}
 
 	socket.on("openApp",function(app){
 		$scope.application = app;
 		$scope.htmlPath = "/app/"+$scope.application.id+"/"+$scope.application.html;
 		$scope.cssPath = "/app/"+$scope.application.id+"/"+$scope.application.css;
 		$scope.scriptPath = "/app/"+$scope.application.id+"/"+$scope.application.script;
+		if($scope.application.script != null)
+		{
+			jQuery.getScript($scope.scriptPath);
+		}
 		$timeout(function(){
 			$scope.state = "on";
 		},19);

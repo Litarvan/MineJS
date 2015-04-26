@@ -4,7 +4,7 @@ var application = {
 	description: "Donnez une déscription",
 	appManager: null,			//Le gestionnaire d'applications du serveur
 	type: "gui",				//Le type d'application. peut etre gui pour l'affichage d'une fenètre ou bac pour une execution en arriere plan
-	needLogIn: true,
+	needLogIn: true,			//Indique s'il faut etre authentifié pour ouvrir l'application
 	//Fonctions coté serveur
 	onLoad: function(){},		//Appelé lors du démarrage du serveur ou de l'activation de l'application
 	onOpen:function(socket){},		//Applé lors de l'ouverture coté client de l'application

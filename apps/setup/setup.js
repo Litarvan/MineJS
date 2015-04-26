@@ -9,6 +9,7 @@ module.exports = function(appManager){
 	setup.needLogIn = false;
 
 	setup.html = "index.html";
+	setup.script = "global.js";
 
 	return setup;
 }

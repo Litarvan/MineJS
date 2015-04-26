@@ -1,40 +1,42 @@
+<div class="app-container" ng-controller="setupAppController">
 <nav class="side-tab-menu">
-	<div id="tab-1-title" class="tab-title active">
+	<div id="tab-1-title" class="tab-title" ng-class="{active: tab == 1}">
 		Bienvenue
 	</div>
-	<div id="tab-2-title" class="tab-title">
+	<div id="tab-2-title" class="tab-title" ng-class="{active: tab == 2}">
 		Compte administrateur
 	</div>
-	<div id="tab-3-title" class="tab-title">
+	<div id="tab-3-title" class="tab-title" ng-class="{active: tab == 3}">
 		Configurer MineJS
 	</div>
-	<div id="tab-4-title" class="tab-title">
+	<div id="tab-4-title" class="tab-title" ng-class="{active: tab == 4}">
 		Version du serveur
 	</div>
-	<div id="tab-5-title" class="tab-title">
+	<div id="tab-5-title" class="tab-title" ng-class="{active: tab == 5}">
 		Configurer le serveur
 	</div>
-	<div id="tab-6-title" class="tab-title">
+	<div id="tab-6-title" class="tab-title" ng-class="{active: tab == 6}">
 		Terminé
 	</div>
 </nav>
 <section class="tab-content">
-	<div id="tab-1" class="tab">
+	<div id="tab-1" ng-show="tab == 1" class="tab">
 	<span>1</span>
 	</div>
-	<div id="tab-2" class="tab">
+	<div id="tab-2" ng-show="tab == 2" class="tab">
 	2
 	</div>
-	<div id="tab-3" class="tab">
+	<div id="tab-3" ng-show="tab == 3" class="tab">
 	3
 	</div>
-	<div id="tab-4" class="tab">
+	<div id="tab-4" ng-show="tab == 4" class="tab">
 	4
 	</div>
-	<div id="tab-5" class="tab">
+	<div id="tab-5" ng-show="tab == 5" class="tab">
 	5
 	</div>
-	<div id="tab-6" class="tab">
+	<div id="tab-6" ng-show="tab == 6" class="tab">
 	6
 	</div>
 </section>
+</div>
