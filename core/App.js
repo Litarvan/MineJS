@@ -4,16 +4,19 @@ var http = require('http').Server(expressApp);
 var io = require('../node_modules/socket.io')(http);
 var fs = require('fs');
 var yaml = require('../node_modules/js-yaml');
-var Server = new require("./minecraftServer");
+var Server = require("./minecraftServer");
+var AppManager = require("./AppManager");
 
 var User = require('./User');
 
 var app = {
 	name: "MineJS",
 	gameServer: null,
+	appManager: null,
 	config: {
 		port: 80,
 	},
+	expressApp: expressApp,
 
 	run: function(){
 		console.log("Ecoute ...");
@@ -23,6 +26,8 @@ var app = {
 
 module.exports = function(){
 	app.gameServer = new Server();
+	app.appManager = new AppManager(app);
+	console.log(app.appManager.appsAvaliable);
 
 	expressApp.use("/static",express.static("static"));
 	expressApp.use("/partials",express.static("core/partials"));
@@ -92,12 +97,12 @@ module.exports = function(){
 		});
 	});
 
-	if(!app.gameServer.run())
+	/*if(!app.gameServer.run())
 	{
 		app.gameServer.install("latest",function(){
 			app.gameServer.run();
 		});
-	}
+	}*/
 
 	app.gameServer.event.on("load",function(){
 		io.emit("gameServerState",1);
