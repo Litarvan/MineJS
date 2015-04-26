@@ -31,7 +31,6 @@ var appManager = {
 		for(var app in this.appsAvaliable)
 		{
 			this.app.expressApp.use("/app/"+app,express.static(__dirname+"/../apps/"+app+"/static"));
-			console.log("url : /app/"+app+"Mene vers "+__dirname+"../apps/"+app+"/static");
 			this.appsAvaliable[app].onLoad();
 		}
 	},

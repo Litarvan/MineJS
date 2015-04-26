@@ -39,6 +39,7 @@ app.factory("onlinePlayersFactory",function(){
 });
 
 app.controller("globalController",function($scope,socket,graphicalFactory){
+	socket.emit("openApp","setup");
 	$scope.backgroundBlur = function(){
 		return graphicalFactory.backgroundBlur;
 	}

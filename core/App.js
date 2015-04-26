@@ -27,7 +27,6 @@ var app = {
 module.exports = function(){
 	app.gameServer = new Server();
 	app.appManager = new AppManager(app);
-	console.log(app.appManager.appsAvaliable);
 
 	expressApp.use("/static",express.static("static"));
 	expressApp.use("/partials",express.static("core/partials"));
@@ -93,6 +92,24 @@ module.exports = function(){
 			else
 			{
 				user.socket.emit("notif",{type:"error",message:"Vous devez d'abort vous connecter"});
+			}
+		});
+
+		user.socket.on("openApp",function(id){
+			if(typeof app.appManager.appsAvaliable[id] != "undefined")
+			{
+				if((app.appManager.appsAvaliable[id].needLogIn && user.trusted) || !app.appManager.appsAvaliable[id].needLogIn)
+				{
+					user.socket.emit("openApp",app.appManager.appsAvaliable[id]);
+				}
+				else
+				{
+					user.socket.emit("notif",{type:"error",message:"Vous devez vous connecter pour ouvrir l'application "+id});
+				}
+			}
+			else
+			{
+				user.socket.emit("notif",{type:"error",message:"L'application "+id+" n'existe pas"});
 			}
 		});
 	});
