@@ -111,5 +111,13 @@ module.exports = function(){
 		io.emit("gameServerState",0);
 	});
 
+	app.gameServer.event.on("playerConnect",function(){
+		io.emit("gameServerPlayerConnect",app.gameServer.onlinePlayers);
+	});
+
+	app.gameServer.event.on("playerDisconnect",function(){
+		io.emit("gameServerPlayerDisconnect",app.gameServer.onlinePlayers);
+	});
+
 	return app;
 }

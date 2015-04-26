@@ -13,6 +13,7 @@ var server = {
 	eula: false,
 	version: 0,
 	state:0,
+	onlinePlayers: [],
 	event: new events.EventEmitter(),
 
 	//functions
@@ -293,12 +294,14 @@ var server = {
 			{
 				var playerName = message.replace(/(.*) joined the game/i,"$1");
 				playerName = playerName.slice(0, playerName.length - 1);
+				this.onlinePlayers.push(playerName);
 				this.event.emit("playerConnect",playerName);
 			}
 			else if(message.search(/(.*) left the game/i) != -1)
 			{
 				var playerName = message.replace(/(.*) left the game/i,"$1");
 				playerName = playerName.slice(0, playerName.length - 1);
+				this.onlinePlayers.splice(this.onlinePlayers.indexOf(playerName),1);
 				this.event.emit("playerDisconnect",playerName);
 			}
 		}.bind(this));
@@ -312,6 +315,7 @@ var server = {
 		}.bind(this));
 
 		this.event.on("close",function(message){
+			this.onlinePlayers = [];
 			this.state = 0;
 		}.bind(this));
 	},

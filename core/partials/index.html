@@ -35,12 +35,8 @@
 				<span ng-click="reload()" ><i class="fi-refresh"></i></span>
 			</div>
 			<div class="menu" ng-class="{hide:!isShowMenu('players')}" id="menuPlayers">
-				<span>EpicKiwi</span>
-				<span>Soad36</span>
-				<span>Kevin94</span>
-				<span>Bernard</span>
-				<span>1Elton</span>
-				<span>MomoLeHommard</span>
+				<span ng-repeat="player in getOnlinePlayers()" >{{player}}</span>
+				<span ng-show="getOnlinePlayers().length == 0" >Personne</span>
 			</div>
 			<div class="menu" ng-controller="menuCommandController" ng-class="{hide:!isShowMenu('command')}" id="menuCommand">
 				<form ng-submit="sendCommand()">
@@ -48,7 +44,7 @@
 				</form>
 			</div>
 				<nav id="control-bar" ng-class="{hide:hideBar}">
-					<span><i class="fi-flag"></i></span><span ng-click="toggleMenu('server')"><i class="fi-{{serverState.icon}}"></i>{{serverState.info}}</span><span ng-click="toggleMenu('players')"><i class="fi-torso"></i>Joueurs: 0/?</span><span><i class="fi-puzzle"></i>0 Plugins</span><span><i class="fi-graph-bar"></i>Charge: 0</span><span ng-click="toggleMenu('command')"><i class="fi-italic"></i></span>
+					<span><i class="fi-flag"></i></span><span ng-click="toggleMenu('server')"><i class="fi-{{serverState.icon}}"></i>{{serverState.info}}</span><span ng-click="toggleMenu('players')"><i class="fi-torso"></i>Joueurs: {{getOnlinePlayers().length}}</span><span><i class="fi-puzzle"></i>0 Plugins</span><span><i class="fi-graph-bar"></i>Charge: 0</span><span ng-click="toggleMenu('command')"><i class="fi-italic"></i></span>
 					<span id="hideBar"><i class="fi-arrows-compress"></i></span>
 				</nav>
 			</div>

@@ -34,6 +34,10 @@ app.factory("serverStateFactory",function(){
 	]
 });
 
+app.factory("onlinePlayersFactory",function(){
+	return [];
+});
+
 app.controller("globalController",function($scope,socket,graphicalFactory){
 	$scope.backgroundBlur = function(){
 		return graphicalFactory.backgroundBlur;
@@ -85,7 +89,7 @@ app.controller("loginController",function($scope,userFactory,socket,graphicalFac
 	}
 });
 
-app.controller("controlBarController",function($scope,barMenuFactory,serverStateFactory,socket){
+app.controller("controlBarController",function($scope,barMenuFactory,serverStateFactory,socket,onlinePlayersFactory){
 	$scope.hideBar = false;
 	$scope.serverState = serverStateFactory[3];
 
@@ -107,6 +111,18 @@ app.controller("controlBarController",function($scope,barMenuFactory,serverState
 			barMenuFactory[name] = true;
 		}
 	}
+
+	$scope.getOnlinePlayers = function(){
+		return onlinePlayersFactory;
+	};
+
+	socket.on("gameServerPlayerConnect",function(players){
+		onlinePlayersFactory = players;
+	});
+
+	socket.on("gameServerPlayerDisconnect",function(players){
+		onlinePlayersFactory = players;
+	});
 
 });
 
