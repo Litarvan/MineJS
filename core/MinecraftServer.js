@@ -385,11 +385,10 @@ var server = {
 	* Return : none
 	*/
 	restart: function(){
+		this.sendCommand("stop");
 		this.serverProcess.on("close",function(code){
 			this.run();
 		}.bind(this));
-
-		this.sendCommand("stop");
 	},
 };
 

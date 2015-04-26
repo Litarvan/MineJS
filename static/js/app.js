@@ -119,3 +119,16 @@ app.controller("menuCommandController",function($scope,socket){
 		}
 	};
 });
+
+app.controller("menuServerController",function($scope,socket){
+
+	$scope.toggle = function(){
+		console.log("toggle");
+		socket.emit("gameServerToggle");
+	}
+
+	$scope.reload = function(){
+		console.log("restart");
+		socket.emit("gameServerReload");
+	}
+});

@@ -46,6 +46,50 @@ module.exports = function(){
 				user.socket.emit("notif",{type:"error",message:"Vous devez d'abort vous connecter"});
 			}
 		});
+
+		user.socket.on("gameServerReload",function(){
+
+			if(user.trusted)
+			{
+				if(app.gameServer.state == 2)
+				{
+					console.log(user.username+" redémarre le serveur");
+					app.gameServer.restart();
+				}
+				else
+				{
+					user.socket.emit("notif",{type:"error",message:"Le serveur n'est pas en ligne"});
+				}
+			}
+			else
+			{
+				user.socket.emit("notif",{type:"error",message:"Vous devez d'abort vous connecter"});
+			}
+		});
+
+		user.socket.on("gameServerToggle",function(){
+			if(user.trusted)
+			{
+				if(app.gameServer.state == 0)
+				{
+					console.log(user.username+" lance le serveur");
+					app.gameServer.run();
+				}
+				else if(app.gameServer.state == 2)
+				{
+					console.log(user.username+" arrete le serveur");
+					app.gameServer.stop();
+				}
+				else
+				{
+					user.socket.emit("notif",{type:"error",message:"Le serveur se démarre"});
+				}
+			}
+			else
+			{
+				user.socket.emit("notif",{type:"error",message:"Vous devez d'abort vous connecter"});
+			}
+		});
 	});
 
 	if(!app.gameServer.run())
