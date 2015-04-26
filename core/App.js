@@ -100,11 +100,19 @@ module.exports = function(){
 			{
 				if((app.appManager.appsAvaliable[id].needLogIn && user.trusted) || !app.appManager.appsAvaliable[id].needLogIn)
 				{
-					user.socket.emit("openApp",app.appManager.appsAvaliable[id].getInfos());
+					if(user.activeApp == null)
+					{
+						user.socket.emit("openApp",app.appManager.appsAvaliable[id].getInfos());
+						user.activeApp = app.appManager.appsAvaliable[id];
+					}
+					else
+					{
+						user.socket.emit("notif",{type:"error",message:"Fermez tout d'abort l'application "+id});
+					}
 				}
 				else
 				{
-					user.socket.emit("notif",{type:"error",message:"Vous devez vous connecter pour ouvrir l'application "+id});
+					user.socket.emit("notif",{type:"error",message:"Vous devez vous connecter pour ouvrir l'application "+user.activeApp.id});
 				}
 			}
 			else
