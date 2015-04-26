@@ -104,6 +104,7 @@ module.exports = function(){
 					{
 						user.socket.emit("openApp",app.appManager.appsAvaliable[id].getInfos());
 						user.activeApp = app.appManager.appsAvaliable[id];
+						user.activeApp.onOpen(user);
 					}
 					else
 					{
@@ -119,6 +120,12 @@ module.exports = function(){
 			{
 				user.socket.emit("notif",{type:"error",message:"L'application "+id+" n'existe pas"});
 			}
+		});
+
+		user.socket.on("closeApp",function(){
+			user.socket.emit("notif",{type:"info",message:"fermeture de l'app"});
+			user.socket.emit("closeApp");
+			user.activeApp = null;
 		});
 	});
 

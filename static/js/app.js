@@ -51,6 +51,14 @@ app.controller("globalController",function($scope,socket,graphicalFactory){
 		return graphicalFactory.backgroundBlur;
 	}
 
+	$scope.openApp = function(id){
+		socket.emit("openApp",id);
+	}
+
+	$scope.closeApp = function(){
+		socket.emit("closeApp");
+	}
+
 	socket.on("notif",function(alert){
 		console.log(alert);
 	});
@@ -132,11 +140,6 @@ app.controller("controlBarController",function($scope,barMenuFactory,serverState
 		onlinePlayersFactory = players;
 	});
 
-	//TESTS
-	$scope.test = function(){	
-		socket.emit("openApp","setup");
-	};
-
 });
 
 app.controller("menuCommandController",function($scope,socket){
@@ -169,7 +172,6 @@ app.controller("applicationController",function($scope,$timeout,socket){
 	$scope.cssPath = null;
 	$scope.scriptPath = null;
 	$scope.application = null;
-	$scope.selectedTab = 1;
 
 	$scope.setTab = function(id)
 	{
@@ -178,17 +180,34 @@ app.controller("applicationController",function($scope,$timeout,socket){
 
 	socket.on("openApp",function(app){
 		$scope.application = app;
-		$scope.htmlPath = "/app/"+$scope.application.id+"/"+$scope.application.html;
-		$scope.cssPath = "/app/"+$scope.application.id+"/"+$scope.application.css;
 		$scope.scriptPath = "/app/"+$scope.application.id+"/"+$scope.application.script;
 		if($scope.application.script != null)
 		{
-			jQuery.getScript($scope.scriptPath);
+			jQuery.getScript($scope.scriptPath,continueLoad);
 		}
-		$timeout(function(){
-			$scope.state = "on";
-		},19);
+		else
+		{
+			continueLoad();
+		}
+		function continueLoad()
+		{
+			$scope.htmlPath = "/app/"+$scope.application.id+"/"+$scope.application.html;
+			$scope.cssPath = "/app/"+$scope.application.id+"/"+$scope.application.css;
+			$timeout(function(){
+				$scope.state = "on";
+			},19);
+		}
 		console.log($scope.application);
+	});
+
+	socket.on("closeApp",function(){
+		$scope.state = "off";
+		$timeout(function(){
+			$scope.application = null;
+			$scope.htmlPath = null;
+			$scope.cssPath = null;
+			$scope.scriptPath = null;
+		},500);
 	});
 
 });
