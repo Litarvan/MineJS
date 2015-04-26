@@ -30,7 +30,7 @@
 			<style scoped ng-if="application.css != null" >
 				@import url("{{cssPath}}");
 			</style>
-			<div id="app-container app-{{application.id}}" ng-include="htmlPath">
+			<div id="app-{{application.id}}" class="app-container" ng-include="htmlPath">
 			</div>
 		</div>
 
