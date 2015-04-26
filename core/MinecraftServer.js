@@ -317,6 +317,7 @@ var server = {
 			{
 
 				this.serverProcess = cp.spawn("java",["-Xmx"+this.ram+"M","-Xms"+this.ram+"M","-jar",this.serverFile,"nogui"],{cwd:this.folder});
+				this.event.emit("load");
 
 				this.serverProcess.stdout.setEncoding("UTF-8");
 				var line = "";
@@ -330,8 +331,8 @@ var server = {
 				}.bind(this));
 
 				this.serverProcess.on("close",function(code){
-					//Serveur etein
-				});
+					this.event.emit("close");
+				}.bind(this));
 
 				return true;
 
