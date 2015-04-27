@@ -1,4 +1,5 @@
 var Application = require(__dirname+'/../../core/Application');
+var User = require(__dirname+'/../../core/User')
 
 module.exports = function(appManager){
 	var setup = new Application(appManager);
@@ -17,6 +18,17 @@ module.exports = function(appManager){
 	setup.html = "setupInit.html";
 	setup.css = "setupApp.css";
 	setup.script = "setupApp.js";
+
+	setup.onOpen = function(user){
+		user.socket.on("appSetupRegisterAdmin",function(data){
+			var admin = new User();
+			admin.infos.username = data.username;
+			admin.setPassword(data.password);
+			admin.save(function(){
+				user.socket.emit("appSetupRegisterAdmin",{success: true});
+			});
+		});
+	}
 
 	return setup;
 }

@@ -22,13 +22,23 @@ module.exports = function(socket){
 		{
 			var shahash = crypto.createHash('sha1');
 			shahash.update(string);
-			return shahash.digest('hex');
+			var result = shahash.digest('hex');
+			return result;
 		},
 
-		save: function(){
-			var users = yaml.safeLoad(fs.readFileSync('./config/users.yml', 'utf8'));
+		save: function(callback){
+			try
+			{
+				var users = yaml.safeLoad(fs.readFileSync('./config/users.yml', 'utf8'));
+			}
+			catch(e)
+			{
+				fs.closeSync(fs.openSync('./config/users.yml', 'w'));
+				console.log(e);
+				users = [];
+			}
 
-			if(typeof users != "array")
+			if(typeof users != "object")
 			{
 				users = [];
 			}
@@ -50,17 +60,24 @@ module.exports = function(socket){
 			fs.unlinkSync('./config/users.yml');
 			fs.writeFile('./config/users.yml', yaml.dump(users), function (err) {
 			  if (err) throw err;
+			  callback();
 			});
 		},
 
 		check: function(){
-			if(typeof this.infos.username !== 'undefined' && typeof this.infos.password !== 'undefined')
+			if(typeof this.infos.username != 'undefined' && typeof this.infos.password != 'undefined')
 			{
 				try 
 				{
-				  var users = yaml.safeLoad(fs.readFileSync('./config/users.yml', 'utf8'));
-				  for(var i = 0; i<users.length; i++)
-				  {
+				var users = yaml.safeLoad(fs.readFileSync('./config/users.yml', 'utf8'));
+
+				if(typeof users != "object")
+				{
+					users = [];
+				}
+
+				 for(var i = 0; i<users.length; i++)
+				 {
 				  	if(users[i].username == this.infos.username && users[i].password == this.infos.password)
 				  	{
 				  		this.trusted = true;

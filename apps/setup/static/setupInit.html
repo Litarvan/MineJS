@@ -34,20 +34,21 @@
 	</div>
 	<nav class="tab-bottom-menu"><div class="button" ng-Click="closeApp()">Sortir</div><div class="button button-primary" ng-click="nextStep()">Demarrer l'installation</div></nav>
 	</div>
-	<div id="tab-2" ng-show="tab == 2" class="tab">
+	<div id="tab-2" ng-controller="createUserSetupAppController" ng-show="tab == 2" class="tab">
 	<div class="content">
 		<h2>Compte administrateur</h2>
 		<p>Configurer votre compte administrateur qui vous servira à vous connecter pour chaque utilisation de MineJS. Vous pourrez ensuite créer de nouveaux comptes dans les parametres</p>
+		<p ng-show="setupUsername == null || setupPassword == null || setupCheckPassword == null" >Vous devez remplire tout les champs</p>
 		<form>
 			<table class="formTable col-2">
 				<tr><td><label for="username" >Nom d'utilisateur</label></td><td><input name="username" type="text" ng-model="setupUsername"/></td></tr>
 				<tr><td><label for="password" >Mot de passe</label></td><td><input name="password" type="password" ng-model="setupPassword"/></td></tr>
-				<tr><td><label for="checkPassword" >Verification</label></td><td><input name="checkPassword" type="password" ng-model="setupCheckPassword"/></td></tr>
+				<tr><td><label for="checkPassword" >Verification <span ng-show="setupPassword != setupCheckPassword">(les deux mots de passe doivent corresponcre)</span></label></td><td><input name="checkPassword" type="password" ng-class="{badEntry:setupPassword != setupCheckPassword}" ng-model="setupCheckPassword"/></td></tr>
 			</table>
 		</form>
 		<p>Apres avoir saisi les informations validez en appuyant sur <strong>Créer l'utilisateur</strong></p>
 	</div>
-	<nav class="tab-bottom-menu"><div class="button" ng-Click="previousStep()">Précédent</div><div class="button button-primary" ng-click="nextStep()">Créer l'utilisateur</div></nav>
+	<nav class="tab-bottom-menu"><div class="button" ng-Click="previousStep()">Précédent</div><div class="button button-primary" ng-click="createUser()">Créer l'utilisateur</div></nav>
 	</div>
 	<div id="tab-3" ng-show="tab == 3" class="tab">
 	<div class="content">
@@ -56,11 +57,11 @@
 	</div>
 	<nav class="tab-bottom-menu"><div class="button button-primary" ng-click="nextStep()">Suivant</div></nav>
 	</div>
-	<div id="tab-4" ng-show="tab == 4" class="tab">
+	<div id="tab-4" ng-controller="installServerSetupAppController" ng-show="tab == 4" class="tab">
 	<div class="content">
 		<h2>Version du serveur</h2>
 		<p>Séléctionnez la version du serveur minecraft que vous desirez</p>
-		<div class="big-selector" ng-controller="setupBigSelector">
+		<div class="big-selector">
 			<div class="row" ng-class="{active: isSelected('latest')}" ng-click="select('latest')">Dernière</div>
 			<div class="row" ng-class="{active: isSelected(version)}" ng-click="select(version)" ng-repeat="version in application.custom.minecraftVersionsAvaliable">{{version}}</div>
 		</div>
