@@ -1,9 +1,13 @@
-app.controllerProvider.register("setupAppController",function($scope,$timeout){
+app.controllerProvider.register("setupAppController",function($scope,$timeout,socket){
 	$scope.tab = 1;
 	$scope.loading = {
 		state: false,
 		message: "Patience ... nous installons les lamas",
 	}
+
+	$scope.finish = function(){
+		socket.emit("appSetupFinish");
+	};
 
 	$scope.nextStep = function(){
 		$scope.tab++;

@@ -21,42 +21,60 @@ module.exports = function(appManager){
 	setup.script = "setupApp.js";
 
 	setup.onOpen = function(user){
-		user.socket.on("appSetupRegisterAdmin",function(data){
-			var admin = new User();
-			admin.infos.username = data.username;
-			admin.setPassword(data.password);
-			admin.save(function(){
-				user.socket.emit("appSetupRegisterAdmin",{success: true});
+		if(!setup.appManager.app.isInstalled)
+		{
+			user.socket.on("appSetupRegisterAdmin",function(data){
+				var admin = new User();
+				admin.infos.username = data.username;
+				admin.setPassword(data.password);
+				admin.save(function(){
+					user.socket.emit("appSetupRegisterAdmin",{success: true});
+				});
 			});
-		});
 
-		user.socket.on("appSetupInstallServer",function(version){
-			console.log("Installation du serveur en version "+version);
-			setup.appManager.app.gameServer = new MinecraftServer();
-			setup.appManager.app.gameServer.getAvaliableVersions(function(versions){
-				for(var i = 0; i<versions.length; i++)
-				{
-					if(version == "latest" || version == versions[i])
+			user.socket.on("appSetupInstallServer",function(version){
+				console.log("Installation du serveur en version "+version);
+				setup.appManager.app.gameServer = new MinecraftServer();
+				setup.appManager.app.gameServer.getAvaliableVersions(function(versions){
+					for(var i = 0; i<versions.length; i++)
 					{
-						setup.appManager.app.gameServer.install(version,function(code){
-							if(code == 100)
-							{
-								user.socket.emit("appSetupInstallServer",{success: true});
-							}
-							else
-							{
-								user.socket.emit("appSetupInstallServer",{success: false,message:"Le serveur ne s'est pas installé correctement, code "+code});
-							}
-						});
+						if(version == "latest" || version == versions[i])
+						{
+							setup.appManager.app.gameServer.install(version,function(code){
+								if(code == 100 || code == 101)
+								{
+									user.socket.emit("appSetupInstallServer",{success: true});
+								}
+								else
+								{
+									user.socket.emit("appSetupInstallServer",{success: false,message:"Le serveur ne s'est pas installé correctement, code "+code});
+								}
+							});
+						}
 					}
-				}
+				});
 			});
-		});
+
+			user.socket.on("appSetupFinish",function(){
+				setup.appManager.app.isInstalled = true;
+				setup.appManager.app.loadGameServer();
+				setup.appManager.closeApp(user);
+			});
+		}
+		else
+		{
+			setTimeout(function(){
+				user.socket.emit("notif",{type:"error",message:"MineJS est déjà installé"});
+				setup.appManager.closeApp(user);
+			},500);
+		}
+		
 	}
 
-	setup.onOpen = function(user){
+	setup.onClose = function(user){
 		user.socket.removeAllListeners("appSetupRegisterAdmin");
 		user.socket.removeAllListeners("appSetupInstallServer");
+		user.socket.removeAllListeners("appSetupFinish");
 	}
 
 	return setup;

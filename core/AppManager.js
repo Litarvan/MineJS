@@ -42,9 +42,9 @@ var appManager = {
 				{
 					if(user.activeApp == null)
 					{
-						user.socket.emit("openApp",this.appsAvaliable[id].getInfos());
 						user.activeApp = this.appsAvaliable[id];
 						user.activeApp.onOpen(user);
+						user.socket.emit("openApp",this.appsAvaliable[id].getInfos());
 					}
 					else
 					{
@@ -64,8 +64,8 @@ var appManager = {
 
 	closeApp: function(user){
 			user.socket.emit("notif",{type:"info",message:"fermeture de l'app"});
+			user.activeApp.onClose(user);
 			user.socket.emit("closeApp");
-			user.activeApp.onOpen(user);
 			user.activeApp = null;
 
 	},

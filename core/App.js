@@ -4,7 +4,7 @@ var http = require('http').Server(expressApp);
 var io = require('../node_modules/socket.io')(http);
 var fs = require('fs');
 var yaml = require('../node_modules/js-yaml');
-var Server = require("./minecraftServer");
+var MinecraftServer = require("./MinecraftServer");
 var AppManager = require("./AppManager");
 
 var User = require('./User');
@@ -50,6 +50,23 @@ var app = {
 module.exports = function(){
 	app.appManager = new AppManager(app);
 
+	if(fs.existsSync(__dirname+"/../config/users.yml"))
+	{
+		if(typeof yaml.safeLoad(fs.readFileSync('./config/users.yml', 'utf8')) != "object")
+		{
+			app.isInstalled = false;
+		}
+		else
+		{
+			app.isInstalled = true;
+			app.gameServer = new MinecraftServer();
+		}
+	}
+	else
+	{
+		app.isInstalled = false;
+	}
+
 	expressApp.use("/static",express.static("static"));
 	expressApp.use("/partials",express.static("core/partials"));
 
@@ -59,6 +76,11 @@ module.exports = function(){
 
 	io.on("connection",function(socket){
 		var user = new User(socket);
+
+		if(!app.isInstalled)
+		{
+			app.appManager.openApp("setup",user);
+		}
 
 		if(app.gameServer != null)
 		{
