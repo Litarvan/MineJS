@@ -34,6 +34,41 @@ var appManager = {
 			this.appsAvaliable[app].onLoad();
 		}
 	},
+
+	openApp: function(id,user){
+		if(typeof this.appsAvaliable[id] != "undefined")
+			{
+				if((this.appsAvaliable[id].needLogIn && user.trusted) || !this.appsAvaliable[id].needLogIn)
+				{
+					if(user.activeApp == null)
+					{
+						user.socket.emit("openApp",this.appsAvaliable[id].getInfos());
+						user.activeApp = this.appsAvaliable[id];
+						user.activeApp.onOpen(user);
+					}
+					else
+					{
+						user.socket.emit("notif",{type:"error",message:"Fermez tout d'abort l'application "+id});
+					}
+				}
+				else
+				{
+					user.socket.emit("notif",{type:"error",message:"Vous devez vous connecter pour ouvrir l'application "+user.activeApp.id});
+				}
+			}
+			else
+			{
+				user.socket.emit("notif",{type:"error",message:"L'application "+id+" n'existe pas"});
+			}
+	},
+
+	closeApp: function(user){
+			user.socket.emit("notif",{type:"info",message:"fermeture de l'app"});
+			user.socket.emit("closeApp");
+			user.activeApp.onOpen(user);
+			user.activeApp = null;
+
+	},
 }
 
 module.exports = function(app){

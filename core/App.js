@@ -16,6 +16,7 @@ var app = {
 	config: {
 		port: 80,
 	},
+	isInstalled: false,
 	expressApp: expressApp,
 
 	run: function(){
@@ -141,37 +142,11 @@ module.exports = function(){
 		});
 
 		user.socket.on("openApp",function(id){
-			if(typeof app.appManager.appsAvaliable[id] != "undefined")
-			{
-				if((app.appManager.appsAvaliable[id].needLogIn && user.trusted) || !app.appManager.appsAvaliable[id].needLogIn)
-				{
-					if(user.activeApp == null)
-					{
-						user.socket.emit("openApp",app.appManager.appsAvaliable[id].getInfos());
-						user.activeApp = app.appManager.appsAvaliable[id];
-						user.activeApp.onOpen(user);
-					}
-					else
-					{
-						user.socket.emit("notif",{type:"error",message:"Fermez tout d'abort l'application "+id});
-					}
-				}
-				else
-				{
-					user.socket.emit("notif",{type:"error",message:"Vous devez vous connecter pour ouvrir l'application "+user.activeApp.id});
-				}
-			}
-			else
-			{
-				user.socket.emit("notif",{type:"error",message:"L'application "+id+" n'existe pas"});
-			}
+			app.appManager.openApp(id,user);
 		});
 
 		user.socket.on("closeApp",function(){
-			user.socket.emit("notif",{type:"info",message:"fermeture de l'app"});
-			user.socket.emit("closeApp");
-			user.activeApp.onOpen(user);
-			user.activeApp = null;
+			app.appManager.closeApp(user);
 		});
 	});
 
