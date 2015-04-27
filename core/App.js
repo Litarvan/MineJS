@@ -170,6 +170,7 @@ module.exports = function(){
 		user.socket.on("closeApp",function(){
 			user.socket.emit("notif",{type:"info",message:"fermeture de l'app"});
 			user.socket.emit("closeApp");
+			user.activeApp.onOpen(user);
 			user.activeApp = null;
 		});
 	});

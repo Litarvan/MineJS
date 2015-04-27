@@ -54,5 +54,10 @@ module.exports = function(appManager){
 		});
 	}
 
+	setup.onOpen = function(user){
+		user.socket.removeAllListeners("appSetupRegisterAdmin");
+		user.socket.removeAllListeners("appSetupInstallServer");
+	}
+
 	return setup;
 }
