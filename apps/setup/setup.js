@@ -8,7 +8,10 @@ module.exports = function(appManager){
 	setup.description = "Permet la premiere installation de MineJS";
 	setup.needLogIn = false;
 
+	setup.style.primaryColor = "#009820";
+
 	setup.html = "index.html";
+	setup.css = "global.css";
 	setup.script = "global.js";
 
 	return setup;

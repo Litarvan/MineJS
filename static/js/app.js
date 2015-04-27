@@ -8,6 +8,17 @@ app.config(function($controllerProvider, $compileProvider)
     // Register routes with the $routeProvider
 });
 
+app.directive('parseStyle', function($interpolate) {
+    return function(scope, elem) {
+        var exp = $interpolate(elem.html()),
+            watchFunc = function () { return exp(scope); };
+
+        scope.$watch(watchFunc, function (html) {
+            elem.html(html);
+        });
+    };
+});
+
 app.factory("userFactory",function(){
 	return {
 		status: "anonymous",
@@ -165,17 +176,34 @@ app.controller("menuServerController",function($scope,socket){
 	}
 });
 
-app.controller("applicationController",function($scope,$timeout,socket){
+app.controller("applicationController",function($scope,$timeout,$interpolate,socket){
 
 	$scope.state = "off";
 	$scope.htmlPath = null;
 	$scope.cssPath = null;
 	$scope.scriptPath = null;
 	$scope.application = null;
+	$scope.dynamicCss = {};
 
 	$scope.setTab = function(id)
 	{
 		$scope.selectedTab = id;
+	}
+
+	$scope.loadedCss = function(id)
+	{
+		var css = jQuery("#"+id+" span").html();
+		$scope.dynamicCss[id] = css;
+		jQuery("#"+id+" span").html("<style id='"+id+"' >"+css+"</style>");
+		$scope.updateCss();
+	}
+
+	$scope.updateCss = function()
+	{
+		jQuery("#app style").each(function(index,element){
+			var exp = $interpolate($scope.dynamicCss[jQuery(element).attr("id")]);
+			jQuery(element).html(exp($scope));
+		});
 	}
 
 	socket.on("openApp",function(app){
@@ -193,11 +221,11 @@ app.controller("applicationController",function($scope,$timeout,socket){
 		{
 			$scope.htmlPath = "/app/"+$scope.application.id+"/"+$scope.application.html;
 			$scope.cssPath = "/app/"+$scope.application.id+"/"+$scope.application.css;
+			$scope.updateCss();
 			$timeout(function(){
 				$scope.state = "on";
 			},19);
 		}
-		console.log($scope.application);
 	});
 
 	socket.on("closeApp",function(){

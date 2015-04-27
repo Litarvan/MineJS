@@ -1,0 +1,104 @@
+#app .app-container
+{
+	width: 100%;
+	height: 100%;
+}
+
+#app .side-tab-menu
+{
+	background-color: white;
+	width: 20%;
+	height: 100%;
+	border-right: solid 1px #A2A2A2;
+	float:left;
+	position: relative;
+	z-index: 29;
+}
+
+#app .side-tab-menu .tab-title
+{
+	position: relative;
+	width: 70%;
+	height: 50px;
+	line-height: 50px;
+	padding-left: 20%;
+	padding-right: 10%;
+	font-size: 15px;
+	color: black;
+	transition-property: all;
+	transition-duration: 0.1s;
+	cursor: pointer;
+}
+
+#app .side-tab-menu .tab-title:hover, #app .side-tab-menu .tab-title.active
+{
+	background-color: {{application.style.primaryColor}};
+	color: white;
+}
+
+#app .side-tab-menu .tab-title.active::before
+{
+	content: "";
+	position: absolute;
+	top: 10px;
+	left: 100%;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 15px 0 15px 10px;
+	border-color: transparent transparent transparent {{application.style.primaryColor}};
+	animation: goRightArrow 1s;
+	-webkit-animation: goRightArrow 1s;
+}
+
+#app .tab-content
+{
+	height: 100%;
+	padding-left: 21%;
+}
+
+#app .tab
+{
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+#app .tab-bottom-menu
+{
+	width: 105%;
+	margin-left: -5%;
+	height: 50px;
+	padding-bottom: 40px;
+	line-height: 50px;
+	position: absolute;
+	bottom: 0;
+	border-top: solid 1px #A2A2A2;
+	text-align: right;
+	z-index: 20;
+}
+
+#app .button
+{
+	display: inline;
+	padding: 5px 10px;
+	background-color: #A2A2A2;
+	color: black;
+	cursor: pointer;
+	font-size: 15px;
+	margin-left: 10px;
+	margin-right: 10px;
+	height: 30px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#app .button.button-primary
+{
+	background-color: {{application.style.primaryColor}};
+	color: white;
+}

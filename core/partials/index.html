@@ -30,9 +30,10 @@
 		</div>
 
 		<div id="app" ng-controller="applicationController" ng-class="{active: state == 'on', reduce: state == 'reduce'}" class="panel">
-			<style scoped ng-if="application.css != null" >
-				@import url("{{cssPath}}");
-			</style>
+			<ng-include src="'/static/css/app-framework.css'" id="appCssFramework" onload="loadedCss('appCssFramework')">
+			</ng-include>
+			<ng-include ng-if="application.css != null" src="cssPath" id="appCss" onload="loadedCss('appCss')">
+			</ng-include>
 			<div id="app-{{application.id}}" class="app-container" ng-include="htmlPath">
 			</div>
 		</div>
