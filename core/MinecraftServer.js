@@ -3,6 +3,8 @@ var cp = require('child_process');
 var events = require('events');
 var https = require('https');
 
+module.exports = function(){
+
 var server = {
 	//Variables
 	folder: __dirname+"/../gamefiles/minecraft-server",
@@ -137,7 +139,10 @@ var server = {
 			
 			if(this.installStatus == 3)
 			{
-				fs.mkdirSync(this.folder);
+				if(!fs.existsSync(this.folder))
+				{
+					fs.mkdirSync(this.folder);
+				}
 			}
 			
 			if(this.installStatus <= 3)
@@ -396,7 +401,6 @@ var server = {
 	},
 };
 
-module.exports = function(){
 	server.advancedEventDispacher();
 	return server;
 };

@@ -1,6 +1,6 @@
 var Application = require(__dirname+'/../../core/Application');
 var User = require(__dirname+'/../../core/User');
-var MinecraftServer = new require(__dirname+"/../../core/MinecraftServer")();
+var MinecraftServer = require(__dirname+"/../../core/MinecraftServer");
 
 module.exports = function(appManager){
 	var setup = new Application(appManager);
@@ -10,7 +10,7 @@ module.exports = function(appManager){
 	setup.description = "Permet la premiere installation de MineJS";
 	setup.needLogIn = false;
 
-	MinecraftServer.getAvaliableVersions(function(versions){
+	new MinecraftServer().getAvaliableVersions(function(versions){
 		setup.custom.minecraftVersionsAvaliable = versions;
 	});
 
@@ -27,6 +27,29 @@ module.exports = function(appManager){
 			admin.setPassword(data.password);
 			admin.save(function(){
 				user.socket.emit("appSetupRegisterAdmin",{success: true});
+			});
+		});
+
+		user.socket.on("appSetupInstallServer",function(version){
+			console.log("Installation du serveur en version "+version);
+			setup.appManager.app.gameServer = new MinecraftServer();
+			setup.appManager.app.gameServer.getAvaliableVersions(function(versions){
+				for(var i = 0; i<versions.length; i++)
+				{
+					if(version == "latest" || version == versions[i])
+					{
+						setup.appManager.app.gameServer.install(version,function(code){
+							if(code == 100)
+							{
+								user.socket.emit("appSetupInstallServer",{success: true});
+							}
+							else
+							{
+								user.socket.emit("appSetupInstallServer",{success: false,message:"Le serveur ne s'est pas installé correctement, code "+code});
+							}
+						});
+					}
+				}
 			});
 		});
 	}

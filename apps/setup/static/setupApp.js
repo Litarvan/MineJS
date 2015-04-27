@@ -38,13 +38,16 @@ app.controllerProvider.register("createUserSetupAppController",function($scope,s
 
 });
 
-app.controllerProvider.register("installServerSetupAppController",function($scope){
-	$scope.slected = null;
+app.controllerProvider.register("installServerSetupAppController",function($scope,socket){
+
+	$scope.selected = null;
+
 	$scope.select = function(id){
-		$scope.slected = id;
+		$scope.selected = id;
 	};
+
 	$scope.isSelected = function(id){
-		if(id == $scope.slected)
+		if(id == $scope.selected)
 		{
 			return true;
 		}
@@ -53,4 +56,26 @@ app.controllerProvider.register("installServerSetupAppController",function($scop
 			return false;
 		}
 	};
+
+	$scope.installServer = function(){
+		if($scope.selected != null)
+		{
+			$scope.loading.state = true;
+			$scope.loading.message = "Nous installons votre serveur";
+
+			socket.emit("appSetupInstallServer",$scope.selected);
+
+			socket.once("appSetupInstallServer",function(result){
+				$scope.loading.state = false;
+				if(result.success)
+				{
+					$scope.nextStep();
+				}
+				else
+				{
+					console.warn(result.message);
+				}
+			});
+		}
+	}
 });
