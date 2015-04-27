@@ -28,3 +28,6 @@ node_modules
 
 #Serveur de jeu
 gamefiles/*
+
+#config
+config/users.yml

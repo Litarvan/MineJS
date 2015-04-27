@@ -1,5 +1,5 @@
 var app = new require("./core/App")();
-
+/*
 app.gameServer.event.on("load",function(){
 	console.log("Chargement du serveur Minecraft");
 });
@@ -22,6 +22,6 @@ app.gameServer.event.on("log",function(message){
 
 app.gameServer.event.on("close",function(){
 	console.log("Serveur Minecraft étein");
-});
+});*/
 
 app.run();

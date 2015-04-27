@@ -3,6 +3,8 @@ var cp = require('child_process');
 var events = require('events');
 var https = require('https');
 
+module.exports = function(){
+
 var server = {
 	//Variables
 	folder: __dirname+"/../gamefiles/minecraft-server",
@@ -118,7 +120,6 @@ var server = {
 	* 
 	*/
 	install: function(version,callback){
-
 		this.getInstallStatus(function(){
 
 			if(this.installStatus == 0 )
@@ -137,7 +138,10 @@ var server = {
 			
 			if(this.installStatus == 3)
 			{
-				fs.mkdirSync(this.folder);
+				if(!fs.existsSync(this.folder))
+				{
+					fs.mkdirSync(this.folder);
+				}
 			}
 			
 			if(this.installStatus <= 3)
@@ -202,7 +206,12 @@ var server = {
 					finded = true;
 					this.version = versions[i];
 					var fileStream = fs.createWriteStream(this.folder+"/minecraft_server."+this.version+".jar");
+
 					https.get("https://s3.amazonaws.com/Minecraft.Download/versions/"+this.version+"/minecraft_server."+this.version+".jar",function(response){
+
+						var contentLength = response.headers[ 'content-length' ];
+						var downloaded = 0;
+
 						if(response.statusCode == 200)
 						{
 							response.pipe(fileStream);	
@@ -212,6 +221,11 @@ var server = {
 							callback(204);
 							return;
 						}
+
+						response.on("data",function(chunk){
+							downloaded += chunk.length;
+							var percent = (downloaded*100)/contentLength;
+						});
 
 						response.on("end",function(){
 							callback(200);
@@ -396,7 +410,6 @@ var server = {
 	},
 };
 
-module.exports = function(){
 	server.advancedEventDispacher();
 	return server;
 };

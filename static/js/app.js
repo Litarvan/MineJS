@@ -1,5 +1,24 @@
 var app = angular.module("MineJS",["btford.socket-io"]);
 
+app.config(function($controllerProvider, $compileProvider)
+{
+    app.controllerProvider = $controllerProvider;
+    app.compileProvider    = $compileProvider;
+
+    // Register routes with the $routeProvider
+});
+
+app.directive('parseStyle', function($interpolate) {
+    return function(scope, elem) {
+        var exp = $interpolate(elem.html()),
+            watchFunc = function () { return exp(scope); };
+
+        scope.$watch(watchFunc, function (html) {
+            elem.html(html);
+        });
+    };
+});
+
 app.factory("userFactory",function(){
 	return {
 		status: "anonymous",
@@ -41,6 +60,14 @@ app.factory("onlinePlayersFactory",function(){
 app.controller("globalController",function($scope,socket,graphicalFactory){
 	$scope.backgroundBlur = function(){
 		return graphicalFactory.backgroundBlur;
+	}
+
+	$scope.openApp = function(id){
+		socket.emit("openApp",id);
+	}
+
+	$scope.closeApp = function(){
+		socket.emit("closeApp");
 	}
 
 	socket.on("notif",function(alert){
@@ -147,4 +174,68 @@ app.controller("menuServerController",function($scope,socket){
 		console.log("restart");
 		socket.emit("gameServerReload");
 	}
+});
+
+app.controller("applicationController",function($scope,$timeout,$interpolate,socket){
+
+	$scope.state = "off";
+	$scope.htmlPath = null;
+	$scope.cssPath = null;
+	$scope.scriptPath = null;
+	$scope.application = null;
+	$scope.dynamicCss = {};
+
+	$scope.setTab = function(id)
+	{
+		$scope.selectedTab = id;
+	}
+
+	$scope.loadedCss = function(id)
+	{
+		var css = jQuery("#"+id+" span").html();
+		$scope.dynamicCss[id] = css;
+		jQuery("#"+id+" span").html("<style id='"+id+"' >"+css+"</style>");
+		$scope.updateCss();
+	}
+
+	$scope.updateCss = function()
+	{
+		jQuery("#app style").each(function(index,element){
+			var exp = $interpolate($scope.dynamicCss[jQuery(element).attr("id")]);
+			jQuery(element).html(exp($scope));
+		});
+	}
+
+	socket.on("openApp",function(app){
+		$scope.application = app;
+		$scope.scriptPath = "/app/"+$scope.application.id+"/"+$scope.application.script;
+		if($scope.application.script != null)
+		{
+			jQuery.getScript($scope.scriptPath,continueLoad);
+		}
+		else
+		{
+			continueLoad();
+		}
+		function continueLoad()
+		{
+			$scope.htmlPath = "/app/"+$scope.application.id+"/"+$scope.application.html;
+			$scope.cssPath = "/app/"+$scope.application.id+"/"+$scope.application.css;
+			$scope.updateCss();
+			$timeout(function(){
+				$scope.state = "on";
+			},19);
+		}
+	});
+
+	socket.on("closeApp",function(){
+		$scope.state = "off";
+		$timeout(function(){
+			$scope.application = null;
+			$scope.htmlPath = null;
+			$scope.cssPath = null;
+			$scope.scriptPath = null;
+		},500);
+	});
+
 });
