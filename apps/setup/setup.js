@@ -1,5 +1,6 @@
 var Application = require(__dirname+'/../../core/Application');
-var User = require(__dirname+'/../../core/User')
+var User = require(__dirname+'/../../core/User');
+var MinecraftServer = new require(__dirname+"/../../core/MinecraftServer")();
 
 module.exports = function(appManager){
 	var setup = new Application(appManager);
@@ -9,7 +10,7 @@ module.exports = function(appManager){
 	setup.description = "Permet la premiere installation de MineJS";
 	setup.needLogIn = false;
 
-	setup.appManager.app.gameServer.getAvaliableVersions(function(versions){
+	MinecraftServer.getAvaliableVersions(function(versions){
 		setup.custom.minecraftVersionsAvaliable = versions;
 	});
 

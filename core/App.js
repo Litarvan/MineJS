@@ -22,10 +22,31 @@ var app = {
 		console.log("Ecoute ...");
 		http.listen(this.config.port);
 	},
+
+	loadGameServer: function(){
+		app.gameServer.event.on("load",function(){
+			io.emit("gameServerState",1);
+		});
+
+		app.gameServer.event.on("ready",function(){
+			io.emit("gameServerState",2);
+		});
+
+		app.gameServer.event.on("close",function(){
+			io.emit("gameServerState",0);
+		});
+
+		app.gameServer.event.on("playerConnect",function(){
+			io.emit("gameServerPlayerConnect",app.gameServer.onlinePlayers);
+		});
+
+		app.gameServer.event.on("playerDisconnect",function(){
+			io.emit("gameServerPlayerDisconnect",app.gameServer.onlinePlayers);
+		});
+	},
 }
 
 module.exports = function(){
-	app.gameServer = new Server();
 	app.appManager = new AppManager(app);
 
 	expressApp.use("/static",express.static("static"));
@@ -38,12 +59,22 @@ module.exports = function(){
 	io.on("connection",function(socket){
 		var user = new User(socket);
 
-		user.socket.emit("gameServerState",app.gameServer.state);
+		if(app.gameServer != null)
+		{
+			user.socket.emit("gameServerState",app.gameServer.state);
+		}
 
 		user.socket.on("sendCommand",function(command){
 			if(user.trusted)
 			{
-				app.gameServer.sendCommand(command);
+				if(app.gameServer != null)
+				{
+					app.gameServer.sendCommand(command);
+				}
+				else
+				{
+					user.socket.emit("notif",{type:"error",message:"Aucun serveur n'est installé"});
+				}
 			}
 			else
 			{
@@ -55,14 +86,21 @@ module.exports = function(){
 
 			if(user.trusted)
 			{
-				if(app.gameServer.state == 2)
+				if(app.gameServer != null)
 				{
-					console.log(user.username+" redémarre le serveur");
-					app.gameServer.restart();
+					if(app.gameServer.state == 2)
+					{
+						console.log(user.username+" redémarre le serveur");
+						app.gameServer.restart();
+					}
+					else
+					{
+						user.socket.emit("notif",{type:"error",message:"Le serveur n'est pas en ligne"});
+					}
 				}
 				else
 				{
-					user.socket.emit("notif",{type:"error",message:"Le serveur n'est pas en ligne"});
+					user.socket.emit("notif",{type:"error",message:"Aucun serveur n'est installé"});
 				}
 			}
 			else
@@ -74,19 +112,26 @@ module.exports = function(){
 		user.socket.on("gameServerToggle",function(){
 			if(user.trusted)
 			{
-				if(app.gameServer.state == 0)
+				if(app.gameServer != null)
 				{
-					console.log(user.username+" lance le serveur");
-					app.gameServer.run();
-				}
-				else if(app.gameServer.state == 2)
-				{
-					console.log(user.username+" arrete le serveur");
-					app.gameServer.stop();
+					if(app.gameServer.state == 0)
+					{
+						console.log(user.username+" lance le serveur");
+						app.gameServer.run();
+					}
+					else if(app.gameServer.state == 2)
+					{
+						console.log(user.username+" arrete le serveur");
+						app.gameServer.stop();
+					}
+					else
+					{
+						user.socket.emit("notif",{type:"error",message:"Le serveur se démarre"});
+					}
 				}
 				else
 				{
-					user.socket.emit("notif",{type:"error",message:"Le serveur se démarre"});
+					user.socket.emit("notif",{type:"error",message:"Aucun serveur n'est installé"});
 				}
 			}
 			else
@@ -129,32 +174,10 @@ module.exports = function(){
 		});
 	});
 
-	/*if(!app.gameServer.run())
+	if(app.gameServer != null)
 	{
-		app.gameServer.install("latest",function(){
-			app.gameServer.run();
-		});
-	}*/
-
-	app.gameServer.event.on("load",function(){
-		io.emit("gameServerState",1);
-	});
-
-	app.gameServer.event.on("ready",function(){
-		io.emit("gameServerState",2);
-	});
-
-	app.gameServer.event.on("close",function(){
-		io.emit("gameServerState",0);
-	});
-
-	app.gameServer.event.on("playerConnect",function(){
-		io.emit("gameServerPlayerConnect",app.gameServer.onlinePlayers);
-	});
-
-	app.gameServer.event.on("playerDisconnect",function(){
-		io.emit("gameServerPlayerDisconnect",app.gameServer.onlinePlayers);
-	});
+		app.loadGameServer();
+	}
 
 	return app;
 }
