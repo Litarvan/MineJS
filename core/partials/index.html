@@ -6,6 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="/static/css/global.css"/>
 		<link rel="stylesheet" type="text/css" href="/static/css/startPanel.css"/>
 		<link rel="stylesheet" type="text/css" href="/static/css/apps.css"/>
+		<link rel="stylesheet" type="text/css" href="/static/icons/foundation-icons.css"/>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700,300' rel='stylesheet' type='text/css'>
 	</head>
 	<body ng-controller="globalController">
@@ -15,8 +16,8 @@
 		<div id="start-panel" class="panel">
 			<div id="login-form" ng-controller="loginController" ng-class="{hide:isLogged}">
 				<h1>MineJS</h1>
-				<div class="logBox" ng-class="{error:formError}" ng-submit="logIn()">
-					<form>
+				<div class="logBox" ng-class="{error:formError}">
+					<form ng-submit="logIn()">
 						<input type="text" placeholder="Nom d'utilisateur" ng-model="username"/>
 						<input type="password" placeholder="Mot de passe" ng-model="password"/>
 						<input type="submit" vlaue="Se conecter"/>
@@ -28,6 +29,25 @@
 		<div id="app" class="panel">
 		</div>
 
+			<div id="bar-container" ng-controller="controlBarController">
+			<div class="menu" id="menuServer" ng-controller="menuServerController" ng-class="{hide:!isShowMenu('server')}">
+				<span ng-click="toggle()" ><i class="fi-power"></i></span>
+				<span ng-click="reload()" ><i class="fi-refresh"></i></span>
+			</div>
+			<div class="menu" ng-class="{hide:!isShowMenu('players')}" id="menuPlayers">
+				<span ng-repeat="player in getOnlinePlayers()" >{{player}}</span>
+				<span ng-show="getOnlinePlayers().length == 0" >Personne</span>
+			</div>
+			<div class="menu" ng-controller="menuCommandController" ng-class="{hide:!isShowMenu('command')}" id="menuCommand">
+				<form ng-submit="sendCommand()">
+				<input type="text" ng-model="command"/><input type="submit" value=">"/>
+				</form>
+			</div>
+				<nav id="control-bar" ng-class="{hide:hideBar}">
+					<span><i class="fi-flag"></i></span><span ng-click="toggleMenu('server')"><i class="fi-{{serverState.icon}}"></i>{{serverState.info}}</span><span ng-click="toggleMenu('players')"><i class="fi-torso"></i>Joueurs: {{getOnlinePlayers().length}}</span><span><i class="fi-puzzle"></i>0 Plugins</span><span><i class="fi-graph-bar"></i>Charge: 0</span><span ng-click="toggleMenu('command')"><i class="fi-italic"></i></span>
+					<span id="hideBar"><i class="fi-arrows-compress"></i></span>
+				</nav>
+			</div>
 		</div>
 
 	<script src="/static/js/jquery.js"></script>

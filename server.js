@@ -1,26 +1,27 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var fs = require('fs');
-var yaml = require('js-yaml');
-var User = require('./core/User');
+var app = new require("./core/App")();
 
-app.use("/static",express.static("static"));
-app.use("/partials",express.static("core/partials"));
-
-app.get("/",function(request,response){
-	response.sendFile(__dirname+"/core/partials/index.html");
+app.gameServer.event.on("load",function(){
+	console.log("Chargement du serveur Minecraft");
 });
 
-io.on("connection",function(socket){
-	var user = new User(socket);
+app.gameServer.event.on("ready",function(){
+	console.log("Serveur Minecraft pret");
 });
 
-var user = new User();
-user.infos.username = "baptiste";
-user.setPassword("yolo");
-user.save();
+app.gameServer.event.on("playerConnect",function(name){
+	console.log("Connexion de "+name);
+});
 
-console.log("Ecoute ...");
-http.listen(80);
+app.gameServer.event.on("playerDisconnect",function(name){
+	console.log("Deconnexion de "+name);
+});
+
+app.gameServer.event.on("log",function(message){
+	console.log("MineLog : "+message);
+});
+
+app.gameServer.event.on("close",function(){
+	console.log("Serveur Minecraft étein");
+});
+
+app.run();

@@ -12,6 +12,8 @@ var server = {
 	ram: 1024,
 	eula: false,
 	version: 0,
+	state:0,
+	onlinePlayers: [],
 	event: new events.EventEmitter(),
 
 	//functions
@@ -292,14 +294,29 @@ var server = {
 			{
 				var playerName = message.replace(/(.*) joined the game/i,"$1");
 				playerName = playerName.slice(0, playerName.length - 1);
+				this.onlinePlayers.push(playerName);
 				this.event.emit("playerConnect",playerName);
 			}
 			else if(message.search(/(.*) left the game/i) != -1)
 			{
 				var playerName = message.replace(/(.*) left the game/i,"$1");
 				playerName = playerName.slice(0, playerName.length - 1);
+				this.onlinePlayers.splice(this.onlinePlayers.indexOf(playerName),1);
 				this.event.emit("playerDisconnect",playerName);
 			}
+		}.bind(this));
+
+		this.event.on("load",function(message){
+			this.state = 1;
+		}.bind(this));
+
+		this.event.on("ready",function(message){
+			this.state = 2
+		}.bind(this));
+
+		this.event.on("close",function(message){
+			this.onlinePlayers = [];
+			this.state = 0;
 		}.bind(this));
 	},
 
@@ -307,7 +324,9 @@ var server = {
 	* Run
 	* Cette fonction lance le serveur en suivant sa configuration. Si le serveur n'est pas installé (code 2) le serveur ne sera pas démarré
 	* Params : none
-	* Return : none
+	* Return : 
+	*	true : pas d'erreur
+	*	false: le serveur n'est pas installé
 	*/
 	run: function(){
 		this.getInstallStatus(function(){
@@ -315,6 +334,7 @@ var server = {
 			{
 
 				this.serverProcess = cp.spawn("java",["-Xmx"+this.ram+"M","-Xms"+this.ram+"M","-jar",this.serverFile,"nogui"],{cwd:this.folder});
+				this.event.emit("load");
 
 				this.serverProcess.stdout.setEncoding("UTF-8");
 				var line = "";
@@ -328,13 +348,15 @@ var server = {
 				}.bind(this));
 
 				this.serverProcess.on("close",function(code){
-					//Serveur etein
-				});
+					this.event.emit("close");
+				}.bind(this));
+
+				return true;
 
 			}
 			else
 			{
-				console.error("Le serveur n'est pas installé correctement code : "+this.installStatus);
+				return false;
 			}
 		}.bind(this));
 	},
@@ -367,11 +389,10 @@ var server = {
 	* Return : none
 	*/
 	restart: function(){
+		this.sendCommand("stop");
 		this.serverProcess.on("close",function(code){
 			this.run();
 		}.bind(this));
-
-		this.sendCommand("stop");
 	},
 };
 
