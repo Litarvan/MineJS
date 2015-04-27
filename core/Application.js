@@ -9,6 +9,7 @@ module.exports = function(appManager){
 		style:{
 			primaryColor: "#3984FF",//Une chaine de caractere indiquant la couleur principale de l'application
 			},
+		custom: {},					//Il est conseiller de mettre les champs additionnels dans cet objet
 		//Fonctions coté serveur
 		onLoad: function(){},		//Appelé lors du démarrage du serveur ou de l'activation de l'application
 		onOpen:function(user){},		//Applé lors de l'ouverture coté client de l'application
@@ -29,6 +30,7 @@ module.exports = function(appManager){
 				html: this.html,
 				css: this.css,
 				script: this.script,
+				custom: this.custom,
 			};
 		},
 	}

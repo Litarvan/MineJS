@@ -1,4 +1,24 @@
-#app .app-container
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    
+    to {
+      opacity: 1;
+    }
+  }
+
+   @-webkit-keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    
+    to {
+      opacity: 1;
+    }
+  }
+
+ #app .app-container
 {
 	width: 100%;
 	height: 100%;
@@ -53,8 +73,9 @@
 
 #app .tab-content
 {
+	position: relative;
 	height: 100%;
-	padding-left: 21%;
+	padding-left: 20%;
 }
 
 #app .tab
@@ -101,4 +122,88 @@
 {
 	background-color: {{application.style.primaryColor}};
 	color: white;
+}
+
+#app strong
+{
+	color: {{application.style.primaryColor}};
+}
+
+#app form table.formTable
+{
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+	border-collapse: collapse;
+}
+
+#app form
+{
+	margin-bottom: 20px;
+}
+
+#app form table.formTable .col-2 td
+{
+	width: 50%;
+}
+
+#app form table.formTable label, #app form table.formTable input[type="text"], #app form table.formTable input[type="password"]
+{
+	outline: none;
+	width: 100%;
+	line-height: 30px;
+	margin-top: -1px;
+}
+
+#app form table.formTable input[type="text"], #app form table.formTable input[type="password"]
+{
+	border: solid 1px #A2A2A2;
+	width: 95%;
+	padding-left: 2.5%;
+	padding-right: 2.5%;
+	position: relative;
+	transition: all 0.3s;
+}
+
+#app form table.formTable input[type="text"]:focus, #app form table.formTable input[type="password"]:focus
+{
+	z-index: 21;
+	box-shadow: 0 0 5px {{application.style.primaryColor}};
+	border: 1px solid {{application.style.primaryColor}};
+}
+
+#app form table.formTable tr:first-child input[type="text"], #app form table.formTable tr:first-child input[type="password"]
+{
+	border-radius: 10px 10px 0 0;
+}
+
+#app form table.formTable tr:last-child input[type="text"], #app form table.formTable tr:last-child input[type="password"]
+{
+	border-radius: 0 0 10px 10px;
+}
+
+#app .loadScreen
+{
+	width: 80%;
+	height: 100%;
+	position: absolute;
+	z-index: 28;
+	top: 0;
+	left: 0;
+	background-color: rgba(0,0,0,0.8);
+	color: rgba(255,255,255,0.8);
+	text-align: center;
+	margin-left: 20%;
+}
+
+#app .loadScreen h3
+{
+	font-size: 50px;
+	margin-top: 40vh;
+	font-weight: 300;
+}
+
+#app .loadScreen p
+{
+	text-align: center;
 }

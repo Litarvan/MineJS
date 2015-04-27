@@ -22,26 +22,6 @@
     }
   }
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    
-    to {
-      opacity: 1;
-    }
-  }
-
-   @-webkit-keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    
-    to {
-      opacity: 1;
-    }
-  }
-
 #app
 {
 	background-color: #F5F5F5;
