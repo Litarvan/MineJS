@@ -4,10 +4,27 @@ var http = require('http').Server(expressApp);
 var io = require('../node_modules/socket.io')(http);
 var fs = require('fs');
 var yaml = require('../node_modules/js-yaml');
+
 var MinecraftServer = require("./MinecraftServer");
 var AppManager = require("./AppManager");
-
 var User = require('./User');
+
+function exist(path)
+{
+	try
+	{
+		fs.accessSync(path);
+	}
+	catch(e)
+	{
+		if(e.code != "ENOENT")
+		{
+			console.trace(e);
+		}
+		return false;
+	}
+	return true;
+}
 
 module.exports = function(){
 	var app = {
@@ -27,7 +44,6 @@ module.exports = function(){
 		*	1: compte utilisateur créés
 		*	2: configuration globale MineJS éfféctuée
 		*	3: Serveur minecraft téléchargé
-		*	4: Serveur minecraft configuré
 		*/
 		installState: 0,
 
@@ -80,21 +96,16 @@ module.exports = function(){
 		* Return: none
 		*/
 		checkInstall: function(){
-			if(fs.existsSync(__dirname+"/../config/users.yml"))
+			app.isInstalled = false; //A retirer (obsolète)
+
+			//verification de l'existance des dossiers gamefiles et config
+			if(!exist(__dirname+"/../gamefiles"))
 			{
-				if(typeof yaml.safeLoad(fs.readFileSync('./config/users.yml', 'utf8')) != "object")
-				{
-					app.isInstalled = false;
-				}
-				else
-				{
-					app.isInstalled = true;
-					app.gameServer = new MinecraftServer();
-				}
+				fs.mkdir(__dirname+"/../gamefiles");
 			}
-			else
+			if(!exist(__dirname+"/../config"))
 			{
-				app.isInstalled = false;
+				fs.mkdir(__dirname+"/../config");
 			}
 		},
 
@@ -145,6 +156,7 @@ module.exports = function(){
 
 	//Constructeur
 	app.appManager = new AppManager(app);
+	app.checkInstall();
 	app.loadConfig();
 
 	expressApp.use("/static",express.static("static"));

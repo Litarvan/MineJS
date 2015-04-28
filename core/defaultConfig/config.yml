@@ -1,1 +1,4 @@
+#Port utilisé pour le serveur web/http
 port: 80
+#dossier d'installation du serveur minecraft (l'objet sera fondé sur ce dossier)
+gameServerFolder: "minecraft-server"
