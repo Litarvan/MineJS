@@ -9,63 +9,100 @@ var AppManager = require("./AppManager");
 
 var User = require('./User');
 
-var app = {
-	name: "MineJS",
-	gameServer: null,
-	appManager: null,
-	config: {
-		port: 80,
-	},
-	isInstalled: false,
-	expressApp: expressApp,
-
-	run: function(){
-		console.log("Ecoute ...");
-		http.listen(this.config.port);
-	},
-
-	loadGameServer: function(){
-		app.gameServer.event.on("load",function(){
-			io.emit("gameServerState",1);
-		});
-
-		app.gameServer.event.on("ready",function(){
-			io.emit("gameServerState",2);
-		});
-
-		app.gameServer.event.on("close",function(){
-			io.emit("gameServerState",0);
-		});
-
-		app.gameServer.event.on("playerConnect",function(){
-			io.emit("gameServerPlayerConnect",app.gameServer.onlinePlayers);
-		});
-
-		app.gameServer.event.on("playerDisconnect",function(){
-			io.emit("gameServerPlayerDisconnect",app.gameServer.onlinePlayers);
-		});
-	},
-}
-
 module.exports = function(){
-	app.appManager = new AppManager(app);
+	var app = {
+		//variables
+		name: "MineJS",				//Nom de lapplication (ne sert a rien pour le momment
 
-	if(fs.existsSync(__dirname+"/../config/users.yml"))
-	{
-		if(typeof yaml.safeLoad(fs.readFileSync('./config/users.yml', 'utf8')) != "object")
-		{
-			app.isInstalled = false;
-		}
-		else
-		{
-			app.isInstalled = true;
-			app.gameServer = new MinecraftServer();
+		gameServer: null,			//Instance de la classe MinecraftServer permettant le fonctionnement d'un serveur
+
+		appManager: null,			//Instance de la classe AppManager gérant le fonctionnement des applications
+
+		config: {					//Configuration présente dans le fichier config
+			port: 80,				//Port d'écoute du serveur web
+		},
+
+		/**
+		* Status d'installation de MineJS
+		*  -1: MineJS installé
+		*	0: Aucune installation
+		*	1: compte utilisateur créés
+		*	2: configuration globale MineJS éfféctuée
+		*	3: Serveur minecraft téléchargé
+		*	4: Serveur minecraft configuré
+		*/
+		installState: 0,
+
+		expressApp: expressApp,		//Application Express de l'app
+
+		//Fonctions
+		/**
+		* Run
+		* Lance le serveur sur le port définis
+		* Params: none
+		* Return: none
+		*/
+		run: function(){
+			console.log("Ecoute ...");
+			http.listen(this.config.port);
+		},
+
+		/**
+		* LoadGameServer
+		* Crée des évenements Socket pour informer les utilisateurs de l'etat du serveur
+		* Params: none
+		* Return: none
+		*/
+		loadGameServer: function(){
+			app.gameServer.event.on("load",function(){
+				io.emit("gameServerState",1);
+			});
+
+			app.gameServer.event.on("ready",function(){
+				io.emit("gameServerState",2);
+			});
+
+			app.gameServer.event.on("close",function(){
+				io.emit("gameServerState",0);
+			});
+
+			app.gameServer.event.on("playerConnect",function(){
+				io.emit("gameServerPlayerConnect",app.gameServer.onlinePlayers);
+			});
+
+			app.gameServer.event.on("playerDisconnect",function(){
+				io.emit("gameServerPlayerDisconnect",app.gameServer.onlinePlayers);
+			});
+		},
+
+		/**
+		* CheckInstall
+		* Verifie l'état de l'installation de MineJS
+		* Params: none
+		* Return: none
+		*/
+		checkInstall: function(){
+			if(fs.existsSync(__dirname+"/../config/users.yml"))
+			{
+				if(typeof yaml.safeLoad(fs.readFileSync('./config/users.yml', 'utf8')) != "object")
+				{
+					app.isInstalled = false;
+				}
+				else
+				{
+					app.isInstalled = true;
+					app.gameServer = new MinecraftServer();
+				}
+			}
+			else
+			{
+				app.isInstalled = false;
+			}
 		}
 	}
-	else
-	{
-		app.isInstalled = false;
-	}
+
+	//Constructeur
+	app.appManager = new AppManager(app);
 
 	expressApp.use("/static",express.static("static"));
 	expressApp.use("/partials",express.static("core/partials"));
