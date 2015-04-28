@@ -18,9 +18,7 @@ module.exports = function(){
 
 		appManager: null,			//Instance de la classe AppManager gérant le fonctionnement des applications
 
-		config: {					//Configuration présente dans le fichier config
-			port: 80,				//Port d'écoute du serveur web
-		},
+		config: null,				//Configuration présente dans le fichier config
 
 		/**
 		* Status d'installation de MineJS
@@ -98,11 +96,56 @@ module.exports = function(){
 			{
 				app.isInstalled = false;
 			}
-		}
+		},
+
+		/**
+		* LoadConfig
+		* Charge la configuration du serveur ou une configuration par défaut si elle n'existe pas
+		* Params: none
+		* Return: none
+		*/
+		loadConfig: function(){
+			console.info("Chargement de la configuration");
+			var configFile = null;
+			try
+			{
+				configFile = fs.readFileSync(__dirname+"/../config/config.yml");
+			}
+			catch(e)
+			{
+				if(e.code == "ENOENT")
+				{
+					console.warn("Le fichier config.yml n'existe pas, chargement de la configuration par défaut");
+					configFile = fs.readFileSync(__dirname+"/defaultConfig/config.yml");
+				}
+				else
+				{
+					console.trace(e);
+				}
+			}
+
+			var config = yaml.safeLoad(configFile);
+			this.config = config;
+		},
+
+		/**
+		* SaveConfig
+		* Sauvegarde la configuration actuelle
+		* Params: none
+		* Return: none
+		*/
+		saveConfig: function(){
+
+			console.info("Sauvegarde de la configuration");
+			var encodedConfig = yaml.safeDump(this.config);
+			fs.writeFile(__dirname+"/../config/config.yml",encodedConfig);
+
+		},
 	}
 
 	//Constructeur
 	app.appManager = new AppManager(app);
+	app.loadConfig();
 
 	expressApp.use("/static",express.static("static"));
 	expressApp.use("/partials",express.static("core/partials"));
