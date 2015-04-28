@@ -74,6 +74,52 @@ var server = {
 		}.bind(this));
 	},
 
+	//version synchrone de la premiere
+	getInstallStatusSync: function(){
+		try
+		{
+			var files = fs.readdirSync(this.folder);
+			for(var i = 0,config = -1,executable = -1; i < files.length; i++)
+			{
+				if(executable == -1)
+				{
+					executable = files[i].search(/minecraft_server(.*).(exe|jar)/i);
+					this.serverFile = files[i];
+				}
+
+				if(config == -1)
+				{
+					config = files[i].search(/server.properties/i);
+				}
+			}
+
+			if(executable == -1)
+			{
+				this.installStatus = 2;
+				return 2;
+			}
+			else if(config == -1)
+			{
+				this.installStatus = 1;
+				return 1;
+			}
+			else
+			{
+				this.installStatus = 0;
+				return 0;
+			}
+		}
+		catch(e)
+		{
+			this.installStatus = 3;
+			if(e.code != "ENOENT")
+			{
+				console.trace(e);
+			}
+			return 3;
+		}
+	},
+
 	/**
 	* GetAvaliableVersions
 	* Cette fonction cherche sur le serveur officiel la liste des version RELASE de serveur minecraft
