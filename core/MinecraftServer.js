@@ -20,6 +20,10 @@ var server = {
 
 	//functions
 
+	setFolder: function(folder){
+		__dirname+"/../gamefiles/"+folder;
+	},
+
 	/**
 	* GetInstallStatus
 	* Cette fonction renvoie un code de status pour decrir l'etat du serveur minecraft installé
