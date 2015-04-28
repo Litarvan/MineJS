@@ -45,7 +45,7 @@ module.exports = function(){
 		*	2: configuration globale MineJS éfféctuée
 		*	3: Serveur minecraft téléchargé
 		*/
-		installState: 0,
+		installStep: 0,
 
 		expressApp: expressApp,		//Application Express de l'app
 
@@ -98,15 +98,45 @@ module.exports = function(){
 		checkInstall: function(){
 			app.isInstalled = false; //A retirer (obsolète)
 
-			//verification de l'existance des dossiers gamefiles et config
-			if(!exist(__dirname+"/../gamefiles"))
-			{
-				fs.mkdir(__dirname+"/../gamefiles");
-			}
+			//verification de l'existance du dossier config
 			if(!exist(__dirname+"/../config"))
 			{
 				fs.mkdir(__dirname+"/../config");
 			}
+
+			if(!exist(__dirname+"/../gamefiles"))
+			{
+				fs.mkdir(__dirname+"/../gamefiles");
+			}
+			
+			if(!exist(__dirname+"/../config/users.yml"))
+			{
+				this.installStep = 0;
+				return 0;
+			}
+			else if(!exist(__dirname+"/../config/config.yml"))
+			{
+				this.installStep = 1;
+				return 1;
+			}
+			else if(this.gameServer.getInstallStatusSync() == 3 || this.gameServer.getInstallStatusSync() == 2)
+			{
+				this.installStep = 2;
+				return 2;
+			}
+			else if(this.gameServer.getInstallStatusSync() == 1)
+			{
+				this.installStep = 3;
+				return 3;
+			}
+			else
+			{
+				this.installStep = -1;
+				return -1;
+			}
+
+
+
 		},
 
 		/**
@@ -156,8 +186,13 @@ module.exports = function(){
 
 	//Constructeur
 	app.appManager = new AppManager(app);
-	app.checkInstall();
 	app.loadConfig();
+	app.gameServer = new MinecraftServer(app.config.gameServerFolder);
+	app.checkInstall();
+	if(app.installStep != -1)
+	{
+		console.log("Etat de l'installation : "+app.installStep);
+	}
 
 	expressApp.use("/static",express.static("static"));
 	expressApp.use("/partials",express.static("core/partials"));

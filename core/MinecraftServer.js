@@ -3,7 +3,7 @@ var cp = require('child_process');
 var events = require('events');
 var https = require('https');
 
-module.exports = function(){
+module.exports = function(folder){
 
 var server = {
 	//Variables
@@ -460,6 +460,10 @@ var server = {
 	},
 };
 
+	if(typeof folder != undefined)
+	{
+		server.setFolder(folder);
+	}
 	server.advancedEventDispacher();
 	return server;
 };

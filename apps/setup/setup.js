@@ -34,7 +34,6 @@ module.exports = function(appManager){
 
 			user.socket.on("appSetupInstallServer",function(version){
 				console.log("Installation du serveur en version "+version);
-				setup.appManager.app.gameServer = new MinecraftServer();
 				setup.appManager.app.gameServer.getAvaliableVersions(function(versions){
 					for(var i = 0; i<versions.length; i++)
 					{
