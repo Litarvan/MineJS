@@ -460,6 +460,26 @@ var server = {
 		}.bind(this));
 	},
 
+	saveConfig: function()
+	{
+		var configToWrite = "";
+		for(var i = 0;i<Object.keys(this.config).length; i++)
+		{
+			var property = Object.keys(this.config)[i]
+
+			configToWrite +=property+"="+this.config[property]+"\r\n";
+		}
+
+		try
+		{
+			fs.writeFileSync(this.folder+"/server.properties",configToWrite);
+		}
+		catch(e)
+		{
+			console.trace(e)
+		}
+	},
+
 	/**
 	*
 	*/

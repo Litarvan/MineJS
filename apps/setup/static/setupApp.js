@@ -10,7 +10,6 @@ app.controllerProvider.register("setupAppController",function($scope,$timeout,so
 
 	socket.emit("appSetupInstallStep");
 	socket.once("appSetupInstallStep",function(step){
-		console.log(step);
 		switch(step)
 		{
 			case 0:
@@ -29,6 +28,7 @@ app.controllerProvider.register("setupAppController",function($scope,$timeout,so
 				$scope.firstButtonText = "Continuer l'installation";
 			break;
 			case 3:
+				socket.emit("appSetupGetServerConfig");
 				$scope.firstTab = 5;
 				$scope.welcomeMessage = "Vous avez presque tout fait, configurez votre serveur en appuyant sur continuer l'installation";
 				$scope.firstButtonText = "Continuer l'installation";
@@ -95,6 +95,26 @@ app.controllerProvider.register("createUserSetupAppController",function($scope,s
 
 });
 
+app.controllerProvider.register("configServerSetupAppController",function($scope,socket){
+	socket.on("appSetupGetServerConfig",function(config){
+		$scope.config = config;
+		$scope.config["max-players"] = parseInt(config["max-players"],10);
+		$scope.config["max-build-height"] = parseInt(config["max-build-height"],10);
+		$scope.config["server-port"] = parseInt(config["server-port"],10);
+		console.log(config);
+	});
+	
+	$scope.sendConfig = function(){
+		socket.emit("appSetupServerConfig",$scope.config);
+		socket.once("appSetupServerConfig",function(result){
+			if(result.success)
+			{
+				$scope.nextStep();
+			}
+		});
+	};
+});
+
 app.controllerProvider.register("installServerSetupAppController",function($scope,socket){
 
 	$scope.selected = null;
@@ -126,6 +146,7 @@ app.controllerProvider.register("installServerSetupAppController",function($scop
 				$scope.loading.state = false;
 				if(result.success)
 				{
+					socket.emit("appSetupGetServerConfig");				//Pour l'etape suivante
 					$scope.nextStep();
 				}
 				else

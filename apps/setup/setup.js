@@ -66,6 +66,18 @@ module.exports = function(appManager){
 				});
 			});
 
+			user.socket.on("appSetupGetServerConfig",function(){
+				console.log("envoie de la config");
+				user.socket.emit("appSetupGetServerConfig",setup.appManager.app.gameServer.config);
+			});
+
+			user.socket.on("appSetupServerConfig",function(config){
+				setup.appManager.app.installStep = 4;
+				setup.appManager.app.gameServer.config = config;
+				setup.appManager.app.gameServer.saveConfig();
+				user.socket.emit("appSetupServerConfig",{success:true});
+			});
+
 			user.socket.on("appSetupFinish",function(){
 				setup.appManager.app.installStep = -1;
 				setup.appManager.app.loadGameServer();
@@ -84,6 +96,8 @@ module.exports = function(appManager){
 
 	setup.onClose = function(user){
 		user.socket.removeAllListeners("appSetupRegisterAdmin");
+		user.socket.removeAllListeners("appSetupAppConfig");
+		user.socket.removeAllListeners("appSetupGetAppConfig");
 		user.socket.removeAllListeners("appSetupInstallServer");
 		user.socket.removeAllListeners("appSetupFinish");
 	}
