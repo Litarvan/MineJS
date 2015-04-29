@@ -35,7 +35,7 @@
 			</div>
 		</div>
 
-			<div id="bar-container" ng-controller="controlBarController">
+			<div ng-class="{notDisplay:!isLogged()}" id="bar-container" ng-controller="controlBarController">
 			<div class="menu" id="menuServer" ng-controller="menuServerController" ng-class="{hide:!isShowMenu('server')}">
 				<span ng-click="toggle()" ><i class="fi-power"></i></span>
 				<span ng-click="reload()" ><i class="fi-refresh"></i></span>
@@ -49,7 +49,7 @@
 				<input type="text" ng-model="command"/><input type="submit" value=">"/>
 				</form>
 			</div>
-				<nav id="control-bar" ng-class="{hide:hideBar}">
+				<nav id="control-bar" ng-class="{hide:!isLogged()}">
 					<span><i class="fi-flag"></i></span><span ng-click="toggleMenu('server')"><i class="fi-{{serverState.icon}}"></i>{{serverState.info}}</span><span ng-click="toggleMenu('players')"><i class="fi-torso"></i>Joueurs: {{getOnlinePlayers().length}}</span><span><i class="fi-puzzle"></i>0 Plugins</span><span><i class="fi-graph-bar"></i>Charge: 0</span><span ng-click="toggleMenu('command')"><i class="fi-italic"></i></span>
 					<span id="hideBar"><i class="fi-arrows-compress"></i></span>
 				</nav>

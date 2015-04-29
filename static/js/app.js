@@ -57,7 +57,7 @@ app.factory("onlinePlayersFactory",function(){
 	return [];
 });
 
-app.controller("globalController",function($scope,socket,graphicalFactory){
+app.controller("globalController",function($scope,socket,userFactory,graphicalFactory){
 	$scope.backgroundBlur = function(){
 		return graphicalFactory.backgroundBlur;
 	}
@@ -73,6 +73,17 @@ app.controller("globalController",function($scope,socket,graphicalFactory){
 	socket.on("notif",function(alert){
 		console.log(alert);
 	});
+
+	$scope.isLogged = function(){
+		if(userFactory.status == "anonymous")
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
 });
 
 app.controller("loginController",function($scope,userFactory,socket,graphicalFactory){
