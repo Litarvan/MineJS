@@ -17,6 +17,7 @@ var server = {
 	state:0,
 	avaliableVersions: null,
 	onlinePlayers: [],
+	config: null,
 	event: new events.EventEmitter(),
 
 	//functions
@@ -176,6 +177,7 @@ var server = {
 
 			if(this.installStatus == 0 )
 			{
+				this.loadConfig();
 				callback(101);
 				return;
 			}
@@ -183,9 +185,10 @@ var server = {
 			if(this.installStatus == 1)
 			{
 				this.generateConfig(function(){
+					this.loadConfig();
 					callback(100);
 					return;
-				});
+				}.bind(this));
 			}
 			
 			if(this.installStatus == 3)
@@ -202,6 +205,7 @@ var server = {
 					this.generateConfig(function(){
 						if(code == 200)
 						{
+							this.loadConfig();
 							callback(100);
 						}
 						else
@@ -209,7 +213,7 @@ var server = {
 							callback(code);
 						}
 						return;
-					});
+					}.bind(this));
 				}.bind(this));
 			}
 	},
@@ -455,11 +459,42 @@ var server = {
 			this.run();
 		}.bind(this));
 	},
+
+	/**
+	*
+	*/
+	loadConfig: function(){
+		var config = {};
+		try
+		{
+			var configFile = fs.readFileSync(this.folder+"/server.properties",{encoding:"UTF-8"});
+			var lines = configFile.split("\r\n");
+		}
+		catch(e)
+		{
+			console.error("Pas de configuration, générez la tout d'abort");
+			console.trace(e);
+		}
+
+		for(var i = 0; i<lines.length; i++)
+		{
+			if(lines[i].search(/(.+)=(.*)/) != -1)
+			{
+				var property = lines[i].split("=");
+				config[property[0]] = property[1];
+			}
+		}
+		this.config = config;
+	}
 };
 
 	if(typeof folder != undefined)
 	{
 		server.setFolder(folder);
+	}
+	if(server.getInstallStatusSync() == 0)
+	{
+		server.loadConfig();
 	}
 	server.event.setMaxListeners(150);
 	server.advancedEventDispacher();
