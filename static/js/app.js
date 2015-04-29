@@ -211,7 +211,10 @@ app.controller("applicationController",function($scope,$timeout,$interpolate,soc
 		$scope.scriptPath = "/app/"+$scope.application.id+"/"+$scope.application.script;
 		if($scope.application.script != null)
 		{
-			jQuery.getScript($scope.scriptPath,continueLoad);
+			jQuery.getScript($scope.scriptPath,continueLoad).fail(function(jqxhr, settings, exception){
+				console.error("Erreur de chargement de l'app : "+exception.message);
+				console.error(exception.stack);
+			});
 		}
 		else
 		{

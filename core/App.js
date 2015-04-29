@@ -50,6 +50,12 @@ module.exports = function(){
 		expressApp: expressApp,		//Application Express de l'app
 
 		//Fonctions
+
+		setConfig: function(value){
+			this.config = value;
+			this.refreshConfig;
+		},
+
 		/**
 		* Run
 		* Lance le serveur sur le port définis
@@ -96,9 +102,7 @@ module.exports = function(){
 		* Return: none
 		*/
 		checkInstall: function(){
-			app.isInstalled = false; //A retirer (obsolète)
 
-			//verification de l'existance du dossier config
 			if(!exist(__dirname+"/../config"))
 			{
 				fs.mkdir(__dirname+"/../config");
@@ -134,9 +138,10 @@ module.exports = function(){
 				this.installStep = -1;
 				return -1;
 			}
+		},
 
-
-
+		refreshConfig: function(){
+			this.gameServer.setFolder(this.config.gameServerFolder);
 		},
 
 		/**
@@ -167,6 +172,7 @@ module.exports = function(){
 
 			var config = yaml.safeLoad(configFile);
 			this.config = config;
+			this.refreshConfig();
 		},
 
 		/**
@@ -186,8 +192,8 @@ module.exports = function(){
 
 	//Constructeur
 	app.appManager = new AppManager(app);
+	app.gameServer = new MinecraftServer();
 	app.loadConfig();
-	app.gameServer = new MinecraftServer(app.config.gameServerFolder);
 	app.checkInstall();
 	if(app.installStep != -1)
 	{
@@ -204,7 +210,7 @@ module.exports = function(){
 	io.on("connection",function(socket){
 		var user = new User(socket);
 
-		if(!app.isInstalled)
+		if(app.installStep > -1)
 		{
 			app.appManager.openApp("setup",user);
 		}

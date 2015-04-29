@@ -30,9 +30,9 @@
 		<div class="icon-bar"> <i class="fi-download"></i> <i class="fi-torso"></i> <i class="fi-wrench"></i> <i class="fi-check"></i> </div>
 		<p>Bienvenue dans votre installation MineJS. MineJS vous permet d'installer, de configurer et d'administrer votre serveur minecraft sans aucune commande.<p>
 		<p>Durant cette installation vous serez invité a choisir votre nom d'utilisateur et votre mot de passe d'acces, la version votre serveur minecraft et sa configuration.</p>
-		<p>Demarrez maintenan votre installation en cliquant sur le bouton <strong>Demarrer l'installation</strong></p>
+		<p>{{welcomeMessage}}</p>
 	</div>
-	<nav class="tab-bottom-menu"><div class="button" ng-Click="closeApp()">Sortir</div><div class="button button-primary" ng-click="nextStep()">Demarrer l'installation</div></nav>
+	<nav class="tab-bottom-menu"><div class="button" ng-Click="closeApp()">Sortir</div><div class="button button-primary" ng-click="goFirstStep()">{{firstButtonText}}</div></nav>
 	</div>
 	<div id="tab-2" ng-controller="createUserSetupAppController" ng-show="tab == 2" class="tab">
 	<div class="content">
@@ -48,14 +48,21 @@
 		</form>
 		<p>Apres avoir saisi les informations validez en appuyant sur <strong>Créer l'utilisateur</strong></p>
 	</div>
-	<nav class="tab-bottom-menu"><div class="button" ng-Click="previousStep()">Précédent</div><div class="button button-primary" ng-click="createUser()">Créer l'utilisateur</div></nav>
+	<nav class="tab-bottom-menu"><div class="button" ng-Click="closeApp()">Sortir</div><div class="button button-primary" ng-click="createUser()">Créer l'utilisateur</div></nav>
 	</div>
-	<div id="tab-3" ng-show="tab == 3" class="tab">
+	<div id="tab-3" ng-controller="configAppSetupAppController" ng-show="tab == 3" class="tab">
 	<div class="content">
 		<h2>Configurer MineJS</h2>
-		<p>Pour le moment il n'y a rien à configurer de ce coté. Vous pouvez juste cliquer sur <strong>Suivant</strong></p>
+		<p>Configurez votre application MineJS. Si vous ne savez pas laissez par défaut.<p>
+		<form>
+			<table class="formTable col-2">
+				<tr><td><label for="installFolder" >Dossier de téléchargement du serveur</label></td><td><input type="text" name="installFolder" ng-model="installFolder"/></td></tr>
+				<tr><td><label for="port" >Port du serveur web</label></td><td><input type="number" name="port" ng-model="port"/></td></tr>
+			</table>
+		</form>
+		<p>des que vous avez tout remplis cliquez sur <strong>Suivant</strong></p>
 	</div>
-	<nav class="tab-bottom-menu"><div class="button button-primary" ng-click="nextStep()">Suivant</div></nav>
+	<nav class="tab-bottom-menu"><div class="button" ng-Click="closeApp()">Sortir</div><div class="button button-primary" ng-click="configApp()">Suivant</div></nav>
 	</div>
 	<div id="tab-4" ng-controller="installServerSetupAppController" ng-show="tab == 4" class="tab">
 	<div class="content">
@@ -67,14 +74,14 @@
 		</div>
 		<p>Des que vous avez séléctionné votre version cliquez sur <strong>Installer le serveur</strong> pour télécharger le serveur correspondant et générer sa configuration par défaut</p>
 	</div>
-	<nav class="tab-bottom-menu"><div class="button" ng-Click="previousStep()">Précédent</div><div class="button button-primary" ng-click="installServer()">Installer le serveur</div></nav>
+	<nav class="tab-bottom-menu"><div class="button" ng-Click="closeApp()">Sortir</div><div class="button button-primary" ng-click="installServer()">Installer le serveur</div></nav>
 	</div>
 	<div id="tab-5" ng-show="tab == 5" class="tab">
 	<div class="content">
 		<h2>Configurer Le serveur</h2>
 		<p>Il n'est malheuresement pas encore possible de configurer votre serveur. Cliquez sur <strong>Suivant</strong></p>
 	</div>
-	<nav class="tab-bottom-menu"><div class="button button-primary" ng-click="nextStep()">Suivant</div></nav>
+	<nav class="tab-bottom-menu"><div class="button" ng-Click="closeApp()">Sortir</div><div class="button button-primary" ng-click="nextStep()">Suivant</div></nav>
 	</div>
 	<div id="tab-6" ng-show="tab == 6" class="tab">
 	<div class="content bigTitle">

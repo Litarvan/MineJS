@@ -147,7 +147,7 @@
 	width: 50%;
 }
 
-#app form table.formTable label, #app form table.formTable input[type="text"], #app form table.formTable input[type="password"]
+#app form table.formTable label, #app form table.formTable input[type="text"], #app form table.formTable input[type="password"], #app form table.formTable input[type="number"]
 {
 	outline: none;
 	width: 100%;
@@ -155,7 +155,7 @@
 	margin-top: -1px;
 }
 
-#app form table.formTable input[type="text"], #app form table.formTable input[type="password"]
+#app form table.formTable input[type="text"], #app form table.formTable input[type="password"], #app form table.formTable input[type="number"]
 {
 	border: solid 1px #A2A2A2;
 	width: 95%;
@@ -165,26 +165,26 @@
 	transition: all 0.3s;
 }
 
-#app form table.formTable input[type="text"]:focus, #app form table.formTable input[type="password"]:focus
+#app form table.formTable input[type="text"]:focus, #app form table.formTable input[type="password"]:focus,  #app form table.formTable input[type="number"]:focus
 {
 	z-index: 21;
 	box-shadow: 0 0 5px {{application.style.primaryColor}};
 	border: 1px solid {{application.style.primaryColor}};
 }
 
-#app form table.formTable input[type="text"].badEntry, #app form table.formTable input[type="password"].badEntry
+#app form table.formTable input[type="text"].badEntry, #app form table.formTable input[type="password"].badEntry,  #app form table.formTable input[type="number"].badEntry
 {
 	border: #B80000 1px solid;
 	box-shadow: #B80000 0 0 5px;
 	z-index: 22;
 }
 
-#app form table.formTable tr:first-child input[type="text"], #app form table.formTable tr:first-child input[type="password"]
+#app form table.formTable tr:first-child input[type="text"], #app form table.formTable tr:first-child input[type="password"],  #app form table.formTable tr:first-child input[type="number"]
 {
 	border-radius: 10px 10px 0 0;
 }
 
-#app form table.formTable tr:last-child input[type="text"], #app form table.formTable tr:last-child input[type="password"]
+#app form table.formTable tr:last-child input[type="text"], #app form table.formTable tr:last-child input[type="password"],  #app form table.formTable tr:last-child input[type="number"]
 {
 	border-radius: 0 0 10px 10px;
 }

@@ -15,13 +15,14 @@ var server = {
 	eula: false,
 	version: 0,
 	state:0,
+	avaliableVersions: null,
 	onlinePlayers: [],
 	event: new events.EventEmitter(),
 
 	//functions
 
 	setFolder: function(folder){
-		__dirname+"/../gamefiles/"+folder;
+		this.folder = __dirname+"/../gamefiles/"+folder;
 	},
 
 	/**
@@ -133,28 +134,29 @@ var server = {
 	*/
 	getAvaliableVersions: function(callback)
 	{
-		https.get("https://s3.amazonaws.com/Minecraft.Download/versions/versions.json",function(response){
+			https.get("https://s3.amazonaws.com/Minecraft.Download/versions/versions.json",function(response){
 
-			var dataSpam = "";
+				var dataSpam = "";
 
-			response.on("data",function(chunk){
-				dataSpam += chunk;
-			});
+				response.on("data",function(chunk){
+					dataSpam += chunk;
+				});
 
-			response.on("end",function(){
-				var avaliableVersions = [];
-				var datas = JSON.parse(dataSpam);
-				for(var i = 0; i < datas.versions.length; i++)
-				{
-					if(datas.versions[i].type == "release")
+				response.on("end",function(){
+					var avaliableVersions = [];
+					var datas = JSON.parse(dataSpam);
+					for(var i = 0; i < datas.versions.length; i++)
 					{
-						avaliableVersions.push(datas.versions[i].id);
+						if(datas.versions[i].type == "release")
+						{
+							avaliableVersions.push(datas.versions[i].id);
+						}
 					}
-				}
-				callback(avaliableVersions);
-			});
+					this.avaliableVersions = avaliableVersions;
+					callback(this.avaliableVersions);
+				}.bind(this));
 
-		})
+			}.bind(this));
 	},
 
 	/**
@@ -170,7 +172,7 @@ var server = {
 	* 
 	*/
 	install: function(version,callback){
-		this.getInstallStatus(function(){
+		this.getInstallStatusSync();
 
 			if(this.installStatus == 0 )
 			{
@@ -210,8 +212,6 @@ var server = {
 					});
 				}.bind(this));
 			}
-
-		}.bind(this));
 	},
 
 	generateConfig: function(callback){
@@ -248,20 +248,18 @@ var server = {
 	downloadServer: function(version,callback){
 
 		this.getAvaliableVersions(function(versions){
-
-			for(var i = 0,finded = false; i<versions.length; i++)
+			for(var i = 0,finded = false; i<versions.length && !finded; i++)
 			{
 				if(versions[i] == version || version == "latest")
 				{
 					finded = true;
 					this.version = versions[i];
+					console.info("téléchargement depuis https://s3.amazonaws.com/Minecraft.Download/versions/"+this.version+"/minecraft_server."+this.version+".jar");
+					console.info("dans "+this.folder+"/minecraft_server."+this.version+".jar");
 					var fileStream = fs.createWriteStream(this.folder+"/minecraft_server."+this.version+".jar");
-
 					https.get("https://s3.amazonaws.com/Minecraft.Download/versions/"+this.version+"/minecraft_server."+this.version+".jar",function(response){
-
 						var contentLength = response.headers[ 'content-length' ];
 						var downloaded = 0;
-
 						if(response.statusCode == 200)
 						{
 							response.pipe(fileStream);	
@@ -281,7 +279,6 @@ var server = {
 							callback(200);
 						});
 					});
-					break;
 				}
 			}
 
@@ -464,6 +461,7 @@ var server = {
 	{
 		server.setFolder(folder);
 	}
+	server.event.setMaxListeners(150);
 	server.advancedEventDispacher();
 	return server;
 };

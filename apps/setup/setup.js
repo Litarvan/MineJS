@@ -21,41 +21,53 @@ module.exports = function(appManager){
 	setup.script = "setupApp.js";
 
 	setup.onOpen = function(user){
-		if(!setup.appManager.app.isInstalled)
+		if(setup.appManager.app.installStep > -1)
 		{
+			user.socket.once("appSetupInstallStep",function(){
+				user.socket.emit("appSetupInstallStep",setup.appManager.app.installStep);
+			});
+
+			user.socket.on("appSetupGetAppConfig",function(){
+				user.socket.emit("appSetupGetAppConfig",setup.appManager.app.config);
+			});
+
 			user.socket.on("appSetupRegisterAdmin",function(data){
 				var admin = new User();
 				admin.infos.username = data.username;
 				admin.setPassword(data.password);
 				admin.save(function(){
+					setup.appManager.app.installStep = 1;
 					user.socket.emit("appSetupRegisterAdmin",{success: true});
 				});
+			});
+
+			user.socket.on("appSetupAppConfig",function(config){
+				setup.appManager.app.setConfig(config);
+				setup.appManager.app.saveConfig();
+				setup.appManager.app.refreshConfig();
+				setup.appManager.app.installStep = 2;
+				user.socket.emit("appSetupAppConfig",{success:true});
 			});
 
 			user.socket.on("appSetupInstallServer",function(version){
 				console.log("Installation du serveur en version "+version);
 				setup.appManager.app.gameServer.getAvaliableVersions(function(versions){
-					for(var i = 0; i<versions.length; i++)
-					{
-						if(version == "latest" || version == versions[i])
+					setup.appManager.app.gameServer.install(version,function(code){
+						if(code == 100 || code == 101)
 						{
-							setup.appManager.app.gameServer.install(version,function(code){
-								if(code == 100 || code == 101)
-								{
-									user.socket.emit("appSetupInstallServer",{success: true});
-								}
-								else
-								{
-									user.socket.emit("appSetupInstallServer",{success: false,message:"Le serveur ne s'est pas installé correctement, code "+code});
-								}
-							});
+							setup.appManager.app.installStep = 3;
+							user.socket.emit("appSetupInstallServer",{success: true});
 						}
-					}
+						else
+						{
+							user.socket.emit("appSetupInstallServer",{success: false,message:"Le serveur ne s'est pas installé correctement, code "+code});
+						}
+					});
 				});
 			});
 
 			user.socket.on("appSetupFinish",function(){
-				setup.appManager.app.isInstalled = true;
+				setup.appManager.app.installStep = -1;
 				setup.appManager.app.loadGameServer();
 				setup.appManager.closeApp(user);
 			});
