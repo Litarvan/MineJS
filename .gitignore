@@ -30,4 +30,4 @@ node_modules
 gamefiles/*
 
 #config
-config/users.yml
+config/*

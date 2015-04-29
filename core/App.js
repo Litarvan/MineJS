@@ -246,7 +246,7 @@ module.exports = function(){
 				{
 					if(app.gameServer.state == 2)
 					{
-						console.log(user.username+" redémarre le serveur");
+						console.log(user.infos.username+" redémarre le serveur");
 						app.gameServer.restart();
 					}
 					else
@@ -272,12 +272,12 @@ module.exports = function(){
 				{
 					if(app.gameServer.state == 0)
 					{
-						console.log(user.username+" lance le serveur");
+						console.log(user.infos.username+" lance le serveur");
 						app.gameServer.run();
 					}
 					else if(app.gameServer.state == 2)
 					{
-						console.log(user.username+" arrete le serveur");
+						console.log(user.infos.username+" arrete le serveur");
 						app.gameServer.stop();
 					}
 					else
