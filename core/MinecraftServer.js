@@ -484,27 +484,30 @@ var server = {
 	*
 	*/
 	loadConfig: function(){
-		var config = {};
-		try
+		if(this.getInstallStatusSync() == 0)
 		{
-			var configFile = fs.readFileSync(this.folder+"/server.properties",{encoding:"UTF-8"});
-			var lines = configFile.split("\r\n");
-		}
-		catch(e)
-		{
-			console.error("Pas de configuration, générez la tout d'abort");
-			console.trace(e);
-		}
-
-		for(var i = 0; i<lines.length; i++)
-		{
-			if(lines[i].search(/(.+)=(.*)/) != -1)
+			var config = {};
+			try
 			{
-				var property = lines[i].split("=");
-				config[property[0]] = property[1];
+				var configFile = fs.readFileSync(this.folder+"/server.properties",{encoding:"UTF-8"});
+				var lines = configFile.split("\r\n");
 			}
+			catch(e)
+			{
+				console.error("Pas de configuration, générez la tout d'abort");
+				console.trace(e);
+			}
+
+			for(var i = 0; i<lines.length; i++)
+			{
+				if(lines[i].search(/(.+)=(.*)/) != -1)
+				{
+					var property = lines[i].split("=");
+					config[property[0]] = property[1];
+				}
+			}
+			this.config = config;
 		}
-		this.config = config;
 	}
 };
 
