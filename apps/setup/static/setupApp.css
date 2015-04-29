@@ -7,26 +7,6 @@
 	color: {{application.style.primaryColor}};
 }
 
-#app-setup h2
-{
-	font-size: 50px;
-	font-weight: 300;
-	color: {{application.style.primaryColor}};
-}
-
-#app-setup p
-{
-	text-align: justify;
-	margin-bottom: 10px;
-}
-
-#app-setup .tab .content
-{
-	padding: 15px;
-	color: #717171;
-	overflow: auto;
-}
-
 /* Tab 1 */
 #app-setup .bigTitle p
 {

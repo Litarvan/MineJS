@@ -9,6 +9,8 @@ module.exports = function(appManager){
 	setup.name = "Installation";
 	setup.description = "Permet la premiere installation de MineJS";
 	setup.needLogIn = false;
+	setup.showIcon = false;
+	setup.icon = "download.svg";
 
 	new MinecraftServer().getAvaliableVersions(function(versions){
 		setup.custom.minecraftVersionsAvaliable = versions;
@@ -68,6 +70,7 @@ module.exports = function(appManager){
 
 			user.socket.on("appSetupGetServerConfig",function(){
 				console.log("envoie de la config");
+				setup.appManager.app.gameServer.loadConfig();
 				user.socket.emit("appSetupGetServerConfig",setup.appManager.app.gameServer.config);
 			});
 

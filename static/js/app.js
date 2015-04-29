@@ -58,6 +58,8 @@ app.factory("onlinePlayersFactory",function(){
 });
 
 app.controller("globalController",function($scope,socket,userFactory,graphicalFactory){
+	$scope.apps = [];
+
 	$scope.backgroundBlur = function(){
 		return graphicalFactory.backgroundBlur;
 	}
@@ -74,6 +76,10 @@ app.controller("globalController",function($scope,socket,userFactory,graphicalFa
 		console.log(alert);
 	});
 
+	socket.on("displayableApps",function(apps){
+		$scope.apps = apps;
+	})
+
 	$scope.isLogged = function(){
 		if(userFactory.status == "anonymous")
 		{
@@ -83,7 +89,7 @@ app.controller("globalController",function($scope,socket,userFactory,graphicalFa
 		{
 			return true;
 		}
-	}
+	};
 });
 
 app.controller("loginController",function($scope,userFactory,socket,graphicalFactory){
@@ -121,6 +127,7 @@ app.controller("loginController",function($scope,userFactory,socket,graphicalFac
 				userFactory.username = data.username;
 				$scope.isLogged = true;
 				graphicalFactory.backgroundBlur = false;
+				socket.emit("getDisplayableApps");
 				boxOut();
 			}
 		});

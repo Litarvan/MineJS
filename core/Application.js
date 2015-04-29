@@ -6,6 +6,7 @@ module.exports = function(appManager){
 		appManager: null,			//Le gestionnaire d'applications du serveur
 		type: "gui",				//Le type d'application. peut etre gui pour l'affichage d'une fenètre ou bac pour une execution en arriere plan
 		needLogIn: true,			//Indique s'il faut etre authentifié pour ouvrir l'application
+		showIcon: true,
 		style:{
 			primaryColor: "#3984FF",//Une chaine de caractere indiquant la couleur principale de l'application
 			},
@@ -18,6 +19,7 @@ module.exports = function(appManager){
 		html: null,					//Position du fichier html affiché dans le fenètre client
 		css: null, 					//Position du fichier CSS décrivant l'application
 		script: null,				//Position du script executé coté client
+		icon: null,
 		//Fonctions
 		getInfos: function(){
 			return {
@@ -26,6 +28,7 @@ module.exports = function(appManager){
 				description: this.description,
 				type: this.type,
 				needLogIn: this.needLogIn,
+				icon: this.icon,
 				style: this.style,
 				html: this.html,
 				css: this.css,

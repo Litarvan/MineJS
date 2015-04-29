@@ -69,6 +69,19 @@ var appManager = {
 			user.activeApp = null;
 
 	},
+
+	getDisplayableApps: function(){
+		var apps = [];
+		var appsId = Object.keys(this.appsAvaliable);
+		for(var i = 0; i<appsId.length; i++)
+		{
+			if(this.appsAvaliable[appsId[i]].showIcon == true)
+			{
+				apps.push(this.appsAvaliable[appsId[i]].getInfos());
+			}
+		}
+		return apps;
+	}
 }
 
 module.exports = function(app){

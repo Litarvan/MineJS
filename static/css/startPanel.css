@@ -134,3 +134,75 @@ a
 {
 	border-radius: 0 0 10px 10px;
 }
+
+#iconContainer
+{
+	width: 80%;
+	height: 90%;
+	padding-top: 5%;
+	padding-bottom: 5%;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+}
+
+#iconContainer .appIcon
+{
+	width: 110px;
+	margin-bottom: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+#iconContainer .appIcon .appImage
+{
+	position: relative;
+	width: 100px;
+	height: 100px;
+	margin: 5px;
+	overflow: hidden;
+	border-radius: 10px;
+}
+
+#iconContainer .appIcon .appName
+{
+	width: 100%;
+	color: white;
+	text-align: center;
+	transition: 0.5s all;
+}
+
+#iconContainer .appIcon:hover .appName
+{
+	margin-top: -7px;
+	margin-bottom: 7px;
+}
+
+#iconContainer .appIcon .appImage img
+{
+	position: relative;
+}
+
+#iconContainer .appIcon .appImage::before
+{
+	content: "";
+	position: absolute;
+	bottom: 0;
+	height: 100%;
+	width: 100%;
+	transition: 0.5s opacity;
+	background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(0,0,0,0.5) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(0,0,0,0.5)));
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.5) 100%);
+	background: -o-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.5) 100%);
+	background: -ms-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.5) 100%);
+	background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(0,0,0,0.5) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#80000000',GradientType=0 );
+	border-radius: 10px;
+}
+
+#iconContainer .appIcon:hover .appImage::before
+{
+	opacity: 0;
+}

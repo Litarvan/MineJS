@@ -56,6 +56,7 @@ app.controllerProvider.register("setupAppController",function($scope,$timeout,so
 app.controllerProvider.register("configAppSetupAppController",function($scope,socket){
 	socket.emit("appSetupGetAppConfig");
 	socket.once("appSetupGetAppConfig",function(config){
+		console.log(config);
 		$scope.port = config.port;
 		$scope.installFolder = config.gameServerFolder;
 	});

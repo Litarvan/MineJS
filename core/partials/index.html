@@ -14,6 +14,18 @@
 		<div id="display" ng-class="{blur:backgroundBlur()}">
 
 		<div id="start-panel" class="panel">
+
+			<div id="iconContainer">
+				<div ng-click="openApp(app.id)" ng-repeat="app in apps" class="appIcon">
+					<div style="background-color:{{app.style.primaryColor}}" class="appImage">
+						<img src="/app/{{app.id}}/{{app.icon}}" alt="icone de {{app.name}}"/>
+					</div>
+					<div class="appName">
+						{{app.name}}
+					</div>
+				</div>
+			</div>
+
 			<div id="login-form" ng-controller="loginController" ng-class="{hide:isLogged}">
 				<h1>MineJS</h1>
 				<div class="logBox" ng-class="{error:formError}">

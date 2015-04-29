@@ -50,6 +50,12 @@
 	cursor: pointer;
 }
 
+#app .side-tab-menu .separator
+{
+	width: 100%;
+	height: 20px;
+}
+
 #app .side-tab-menu .tab-title:hover, #app .side-tab-menu .tab-title.active
 {
 	background-color: {{application.style.primaryColor}};
@@ -124,7 +130,27 @@
 	color: white;
 }
 
-#app strong
+#app .tab .content
+{
+	padding: 15px;
+	color: #717171;
+	overflow: auto;
+}
+
+#app .tab h2
+{
+	font-size: 50px;
+	font-weight: 300;
+	color: {{application.style.primaryColor}};
+}
+
+#app .tab p
+{
+	text-align: justify;
+	margin-bottom: 10px;
+}
+
+#app .tab strong
 {
 	color: {{application.style.primaryColor}};
 }

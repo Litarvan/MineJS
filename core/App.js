@@ -221,6 +221,11 @@ module.exports = function(){
 			user.socket.emit("gameServerState",app.gameServer.state);
 		}
 
+		user.socket.on("getDisplayableApps",function(){
+			var appsDisplayable = app.appManager.getDisplayableApps();
+			user.socket.emit("displayableApps",appsDisplayable);
+		});
+
 		user.socket.on("sendCommand",function(command){
 			if(user.trusted)
 			{
