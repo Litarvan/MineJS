@@ -74,6 +74,7 @@ module.exports = function(){
 		* Return: none
 		*/
 		loadGameServer: function(){
+			app.gameServer.loadConfig();
 			app.gameServer.event.on("load",function(){
 				io.emit("gameServerState",1);
 			});

@@ -492,10 +492,6 @@ var server = {
 	{
 		server.setFolder(folder);
 	}
-	if(server.getInstallStatusSync() == 0)
-	{
-		server.loadConfig();
-	}
 	server.event.setMaxListeners(150);
 	server.advancedEventDispacher();
 	return server;
