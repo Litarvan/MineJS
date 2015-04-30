@@ -41,6 +41,7 @@
 	width: 70%;
 	height: 50px;
 	line-height: 50px;
+	white-space: nowrap;
 	padding-left: 20%;
 	padding-right: 10%;
 	font-size: 15px;
@@ -103,6 +104,7 @@
 	border-top: solid 1px #A2A2A2;
 	text-align: right;
 	z-index: 20;
+	background-color: #F5F5F5;
 }
 
 #app .button
@@ -134,7 +136,7 @@
 {
 	padding: 15px;
 	color: #717171;
-	overflow: auto;
+	overflow: hidden;
 }
 
 #app .tab h2
@@ -246,4 +248,43 @@
 #app .loadScreen p
 {
 	text-align: center;
+}
+
+@media screen and (max-width: 1000px)
+{
+	#app .side-tab-menu
+	{
+		width: 300px;
+		top: 0;
+		left: -280px;
+		position: absolute;
+		float: none;
+		transition: all 0.5s;
+	}
+
+	#app .side-tab-menu:hover
+	{
+		left: 0;
+	}
+
+	#app .tab-content
+	{
+		padding-left: 0;
+	}
+
+	#app .tab .content
+	{
+		padding-left: 25px;
+	}
+
+	#app form table.formTable
+	{
+		width: 100%;
+	}
+
+	#app .loadScreen
+	{
+		width: 100%;
+		margin-left: 0;
+	}
 }
