@@ -221,6 +221,8 @@ module.exports = function(){
 			user.socket.emit("gameServerState",app.gameServer.state);
 		}
 
+		user.socket.emit("gameServerPlayerConnect",app.gameServer.onlinePlayers);
+
 		user.socket.on("getDisplayableApps",function(){
 			var appsDisplayable = app.appManager.getDisplayableApps();
 			user.socket.emit("displayableApps",appsDisplayable);

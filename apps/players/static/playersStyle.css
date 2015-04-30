@@ -1,0 +1,34 @@
+#app-players .big-selector .row
+{
+	position: relative;
+	overflow: hidden;
+	padding-left: 10%;
+	width: 85%;
+}
+
+#app-players .big-selector .row .headIcon
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 50px;
+}
+
+#app-players .tab-bottom-menu .headIcon
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0.8;
+	height: 100%;
+}
+
+#app-players .tab-bottom-menu .playerName
+{
+	float: left;
+	font-size: 25px;
+	display: inline-block;
+	padding-left: 10%;
+	font-weight: normal;
+	color: {{application.style.primaryColor}};
+}

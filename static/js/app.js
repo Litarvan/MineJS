@@ -57,7 +57,7 @@ app.factory("onlinePlayersFactory",function(){
 	return [];
 });
 
-app.controller("globalController",function($scope,socket,userFactory,graphicalFactory){
+app.controller("globalController",function($scope,socket,userFactory,graphicalFactory,onlinePlayersFactory){
 	$scope.apps = [];
 
 	$scope.backgroundBlur = function(){
@@ -70,6 +70,10 @@ app.controller("globalController",function($scope,socket,userFactory,graphicalFa
 
 	$scope.closeApp = function(){
 		socket.emit("closeApp");
+	}
+
+	$scope.serverCommand = function(command){
+		socket.emit("sendCommand",command);
 	}
 
 	socket.on("notif",function(alert){
@@ -90,6 +94,18 @@ app.controller("globalController",function($scope,socket,userFactory,graphicalFa
 			return true;
 		}
 	};
+
+	$scope.getOnlinePlayers = function(){
+		return onlinePlayersFactory;
+	};
+
+	socket.on("gameServerPlayerConnect",function(players){
+		onlinePlayersFactory = players;
+	});
+
+	socket.on("gameServerPlayerDisconnect",function(players){
+		onlinePlayersFactory = players;
+	});
 });
 
 app.controller("loginController",function($scope,userFactory,socket,graphicalFactory){
@@ -157,25 +173,13 @@ app.controller("controlBarController",function($scope,barMenuFactory,serverState
 		}
 	}
 
-	$scope.getOnlinePlayers = function(){
-		return onlinePlayersFactory;
-	};
-
-	socket.on("gameServerPlayerConnect",function(players){
-		onlinePlayersFactory = players;
-	});
-
-	socket.on("gameServerPlayerDisconnect",function(players){
-		onlinePlayersFactory = players;
-	});
-
 });
 
 app.controller("menuCommandController",function($scope,socket){
 	$scope.sendCommand = function(){
 		if($scope.command != "" && $scope.command != null)
 		{
-			socket.emit("sendCommand",$scope.command);
+			$scope.serverCommand($scope.command);
 			$scope.command = "";
 		}
 	};

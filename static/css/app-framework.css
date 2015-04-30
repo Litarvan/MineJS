@@ -94,8 +94,8 @@
 
 #app .tab-bottom-menu
 {
-	width: 105%;
-	margin-left: -5%;
+	width: 100%;
+	margin-left: -15px;
 	height: 50px;
 	padding-bottom: 40px;
 	line-height: 50px;
@@ -286,5 +286,50 @@
 	{
 		width: 100%;
 		margin-left: 0;
+	}
+}
+
+#app .big-selector
+{
+	max-height: 60vh;
+	background-color: white;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	overflow: auto;
+	border-radius: 10px;
+	border: solid 1px #A2A2A2;
+	margin-bottom: 20px;
+}
+
+#app .big-selector .row
+{
+	width: 90%;
+	line-height: 50px;
+	padding-left: 5%;
+	padding-right: 5%;
+	border-bottom: solid 1px #A2A2A2;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+#app .big-selector .row:hover, #app .big-selector .row.active
+{
+	color: white;
+	background-color: {{application.style.primaryColor}};
+}
+
+#app .big-selector .row:last-child
+{
+	border: none;
+}
+
+@media screen and (max-width: 1150px)
+{
+
+	#app .big-selector
+	{
+		width: 100%;
+		max-height: 40vh;
 	}
 }
